@@ -14,7 +14,8 @@
 
 # Description:
 
-  A devo dating app, with the guided assistance of a Topher bot. Since most devos are afraid with interacting with real people, the matches will be between man and bot.
+A devo dating app, with the guided assistance of a Topher bot. Users will create their profile by adding a description about themselves and add preferences such as their favorite coding language, song on Spotify, and Pokemon. Once their profile is created, devos are sent to the main page where they can accept or reject a preset profile (not actual users). Preset profiles are set to automatically accept any new user. When a user matches with a profile, a chat page will open up, giving the user preset dialogue options with the bot to see if they are truly devo soulmates.
+
 
 
 # Install Guide:
