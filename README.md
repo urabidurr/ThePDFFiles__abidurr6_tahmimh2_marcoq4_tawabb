@@ -5,11 +5,11 @@
 # Roster:
 **Project Manager**: Abidur Rahman
 
-**Thing 1:** Marco Quintero
+**Back-End:** Marco Quintero
 
-**Thing 2:** Tahmim Hassan
+**Front-End:** Tahmim Hassan
 
-**Thing 3:** Tawab Berri
+**Database:** Tawab Berri
 
 
 # Description:
