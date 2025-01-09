@@ -4,10 +4,11 @@ marcoQ -- 2025-01-08 23:31
 tawabB -- 2025-01-09 10:24
 * Renamed design document name in accordance with topher's guidelines
 
-<<<<<<< HEAD
 tahmimH -- 2024-01-09 10:30
 *added branch and started working base templates
-=======
+
 abidurR -- 2025-01-09 10:37
 * Pull requested from DMQ's branch; carried over __init__.py code to main branch
->>>>>>> main
+
+tawabB -- 2024-01-09 10:59
+* initialized several database tables for later use
