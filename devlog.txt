@@ -1,5 +1,8 @@
 marcoQ -- 2025-01-08 23:31
 * Updated design doc by deleting API section, adding all database tables, and changing site map to fit with the original vision of our website
 
-tawabB -- 2024-01-09 10:24
+tawabB -- 2025-01-09 10:24
 * Renamed design document name in accordance with topher's guidelines
+
+abidurR -- 2025-01-09 10:37
+* Pull requested from DMQ's branch; carried over __init__.py code to main branch
