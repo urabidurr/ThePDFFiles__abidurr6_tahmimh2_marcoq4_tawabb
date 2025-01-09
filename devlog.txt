@@ -1,0 +1,2 @@
+marcoQ -- 2025-01-08 23:31
+* Updated design doc by deleting API section, adding all database tables, and changing site map to fit with the original vision of our website
