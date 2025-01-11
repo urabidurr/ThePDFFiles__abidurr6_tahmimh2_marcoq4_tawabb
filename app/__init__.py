@@ -7,23 +7,25 @@ app.secret_key = os.urandom(32)
 ##########################################
 @app.route("/", methods=['GET', 'POST'])
 def home():
+    if 'username' in session:
+        if request.method == 'POST':
+            type = request.form.get("type")
+            if (type == "logoutbutton"):
+                session.pop('username')
+                return redirect(url_for('home'))
+            elif (type == "profilebutton"):
+                return redirect(url_for('profile'))
+            elif (type =="messagesbutton"):
+                return redirect(url_for('messages'))
+            elif (type =="matchbutton"):
+                return redirect(url_for('match'))
+        return render_template('home.html', loggedin=True)
     if request.method == 'POST':
         type = request.form.get("type")
         if (type == "loginbutton"):
             return redirect(url_for('login'))
         elif (type == "signupbutton"):
             return redirect(url_for('signup'))
-        elif (type == "logoutbutton"):
-            session.pop('username')
-            return redirect(url_for('home'))
-        elif (type == "profilebutton"):
-            return redirect(url_for('profile'))
-        elif (type =="messagesbutton"):
-            return redirect(url_for('messages'))
-        elif (type =="matchbutton"):
-            return redirect(url_for('match'))
-    if 'username' in session:
-        return render_template('home.html', loggedin=True)
     return render_template('home.html', loggedin=False)
 ##########################################
 @app.route("/login", methods=['GET', 'POST'])
@@ -32,9 +34,9 @@ def login():
         type = request.form.get("type")
         #LOGIN BUTTON
         if (type == "loginenter"):
-            #DB STUFF HERE
             username = request.form.get("user")
             password = request.form.get("password")
+            #CHECK IF VALID WITH DATABASE
             session['username'] = username
             return redirect(url_for('home'))
         #RETURN BACK HOME BUTTON
@@ -57,10 +59,9 @@ def signup():
         if (type == "signupenter"):
             username = request.form.get("user")
             password = request.form.get("password")
-            #DB STUFF HERE
-            if (True):
-                session['username'] = username
-                return redirect(url_for('home'))
+            #ADD TO DATABASE
+            session['username'] = username
+            return redirect(url_for('home'))
         #RETURN BACK HOME BUTTON
         if (type == "returnhome"):
             return redirect(url_for('home'))
