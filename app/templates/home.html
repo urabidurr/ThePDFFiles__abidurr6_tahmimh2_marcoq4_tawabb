@@ -8,7 +8,29 @@
 </head>
 <body>
   <h1 class="text-3xl font-bold underline">
-    Hi! Welcome to the homepage.
+    Hi! Welcome to the homepage!
   </h1>
+  {% if loggedin %}
+    <form method="POST">
+        <button type="submit" name="type" value="profilebutton">Go to Your Profile</button>
+    </form>
+    <form method="POST">
+        <button type="submit" name="type" value="logoutbutton">Logout</button>
+    </form>
+    <form method="POST">
+      <button type="submit" name="type" value="matchbutton">Match With Others</button>
+    </form>
+    <form method="POST">
+      <button type="submit" name="type" value="messagesbutton">Messages</button>
+    </form>
+  {% else %}
+    <form method="POST">
+        <button type="submit" name="type" value="loginbutton">Login</button>
+    </form>
+    <br>
+    <form method="POST">
+        <button type="submit" name="type" value="signupbutton">Sign Up</button>
+    </form>
+  {% endif %}
 </body>
 </html>
