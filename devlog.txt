@@ -17,4 +17,4 @@ tahmimH -- 2024-01-10 10:58
 *decided to switch to Bootstrap as it worked better for our group
 
 tawabB -- 2024-01-10 10:58
-* complteded databases and begun integration into main app file
+* completed databases and begun integration into main app file
