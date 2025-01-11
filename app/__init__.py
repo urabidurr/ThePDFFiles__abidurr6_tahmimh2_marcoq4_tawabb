@@ -22,7 +22,9 @@ def home():
             return redirect(url_for('messages'))
         elif (type =="matchbutton"):
             return redirect(url_for('match'))
-    return render_template('home.html')
+    if 'username' in session:
+        return render_template('home.html', loggedin=True)
+    return render_template('home.html', loggedin=False)
 ##########################################
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -31,9 +33,10 @@ def login():
         #LOGIN BUTTON
         if (type == "loginenter"):
             #DB STUFF HERE
-            if (True):
-                session['username'] = ""
-                return redirect(url_for('home'))
+            username = request.form.get("user")
+            password = request.form.get("password")
+            session['username'] = username
+            return redirect(url_for('home'))
         #RETURN BACK HOME BUTTON
         if (type == "returnhome"):
             return redirect(url_for('home'))
@@ -52,9 +55,11 @@ def signup():
         type = request.form.get("type")
         #SIGN UP BUTTON
         if (type == "signupenter"):
+            username = request.form.get("user")
+            password = request.form.get("password")
             #DB STUFF HERE
             if (True):
-                session['username'] = ""
+                session['username'] = username
                 return redirect(url_for('home'))
         #RETURN BACK HOME BUTTON
         if (type == "returnhome"):
