@@ -67,6 +67,15 @@ def signup():
             return redirect(url_for('home'))
     return render_template('signup.html')
 ##########################################
+@app.route("/profile", methods=['GET', 'POST'])
+def profile():
+    if 'username' in session:
+        username = session['username']
+        description = "I am the guy."
+        coding_lang = "NetLogo"
+        song = "Everybody Wants to Rule the World"
+        return render_template('profile.html', user = username, desc = description, pref_lang = coding_lang, pref_song = song)
+    return redirect(url_for('home'))
 if __name__ == "__main__":
     app.debug = True
     app.run()
