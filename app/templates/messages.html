@@ -8,7 +8,11 @@
 </head>
 <body>
   <h1 class="text-3xl font-bold underline">
-    Hello world!
+    Direct Messages
   </h1>
+  {% for convo in convos %}
+  <p>{{username}}</p>
+  <p>{{messages[-1]}}</p>
+  {% end for %}
 </body>
 </html>

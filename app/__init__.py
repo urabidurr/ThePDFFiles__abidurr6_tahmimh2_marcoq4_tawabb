@@ -76,6 +76,10 @@ def profile():
         song = "Everybody Wants to Rule the World"
         return render_template('profile.html', user = username, desc = description, pref_lang = coding_lang, pref_song = song)
     return redirect(url_for('home'))
+##########################################
+@app.route("/messages", methods=['GET', 'POST'])
+def messages():
+    return redirect(url_for('messages'))
 if __name__ == "__main__":
     app.debug = True
     app.run()
