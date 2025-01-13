@@ -5,6 +5,12 @@ from db import db
 app = Flask(__name__)
 
 app.secret_key = os.urandom(32)
+
+DB_FILE = "database.db" #create a database for private keys storage
+
+db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+c = db.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+
 ##########################################
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -62,6 +68,10 @@ def signup():
             username = request.form.get("user")
             password = request.form.get("password")
             #ADD TO DATABASE
+            c.execute("SELECT id FROM users;")
+            num = c.catchall()
+            c.execute("INSERT INTO users (id, username, password, rejected, accepted, stranger) VALUES (?, ?, ?, ?, ?, ?);",
+            (len(num), username, password, null, null, num))
             session['username'] = username
             return redirect(url_for('home'))
         #RETURN BACK HOME BUTTON
