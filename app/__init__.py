@@ -104,6 +104,10 @@ def profile():
 @app.route("/messages", methods=['GET', 'POST'])
 def messages():
     return redirect(url_for('messages'))
+##########################################
+@app.route("/match", methods=['GET', 'POST'])
+def match():
+    return redirect(url_for('match'))
 if __name__ == "__main__":
     app.debug = True
     app.run()
