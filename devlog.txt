@@ -27,3 +27,14 @@ abidurR -- 2025-01-11 22:23
 
 tawabB -- 2024-01-13 11:01
 * worked more on databse, incorporated it in main __init file
+
+tawabB -- 2024-01-14 11:01
+* db login works
+
+abidurR -- 2024-01-14 11:01
+* implemented character API
+* card for matches
+
+tahmimH -- 2024-01-14 11:01
+* messages template for html
+* worked on home template

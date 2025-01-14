@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, session, request, redirect
-import os, json, urllib.request
+import os, json, urllib.request, sqlite3
 from db import db
 
 app = Flask(__name__)
@@ -8,13 +8,15 @@ app.secret_key = os.urandom(32)
 
 DB_FILE = "database.db" #create a database for private keys storage
 
-db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
-c = db.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
 
 ##########################################
+db.create()
+
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    db.create()
+
     if 'username' in session:
         if request.method == 'POST':
             type = request.form.get("type")
@@ -69,9 +71,19 @@ def signup():
             password = request.form.get("password")
             #ADD TO DATABASE
             c.execute("SELECT id FROM users;")
-            num = c.catchall()
-            c.execute("INSERT INTO users (id, username, password, rejected, accepted, stranger) VALUES (?, ?, ?, ?, ?, ?);",
-            (len(num), username, password, null, null, num))
+            num = c.fetchall()
+
+            c.execute("INSERT INTO users (id, username, password) VALUES (?, ?, ?);",
+            (len(num), username, password))
+
+            print("USER IDS:")
+            print(num)
+
+            c.execute("SELECT * FROM users")
+            prin = c.fetchall()
+            print("users: ")
+            print(prin)
+
             session['username'] = username
             return redirect(url_for('home'))
         #RETURN BACK HOME BUTTON
