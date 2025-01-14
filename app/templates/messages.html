@@ -34,11 +34,9 @@
     </form>
     {% endfor %}
     {% if convo_open > -1 %}
-      {% for convo in convos %}
-        {% for message in convo %}
-          <h2>{{message.get("sender")}}</h2>
-          <p>{{message.get("text")}}<sub>{{message.get("time sent")}}</sub></p>
-        {% endfor %}
+      {% for message in convos[convo_open] %}
+        <h2>{{message.get("sender")}}</h2>
+        <p>{{message.get("text")}}<sub>{{message.get("time sent")}}</sub></p>
       {% endfor %}
     {% endif %}
 
