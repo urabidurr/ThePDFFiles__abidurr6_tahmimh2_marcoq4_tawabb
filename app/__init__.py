@@ -69,6 +69,7 @@ def signup():
         if (type == "signupenter"):
             username = request.form.get("user")
             password = request.form.get("password")
+            #Comment from DMQ: SHOULDN'T THIS BE A FUNCTION IN db.py THAT IS CALLED IN THIS FILE?
             #ADD TO DATABASE
             c.execute("SELECT id FROM users;")
             num = c.fetchall()
@@ -94,6 +95,17 @@ def signup():
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
     if 'username' in session:
+        if request.method == 'POST':
+            type = request.form.get("type")
+            if (type == "logoutbutton"):
+                session.pop('username')
+                return redirect(url_for('home'))
+            elif (type == "homebutton"):
+                return redirect(url_for('home'))
+            elif (type =="messagesbutton"):
+                return redirect(url_for('messages'))
+            elif (type =="matchbutton"):
+                return redirect(url_for('match'))
         username = session['username']
         description = "I am the guy."
         coding_lang = "NetLogo"
@@ -103,7 +115,29 @@ def profile():
 ##########################################
 @app.route("/messages", methods=['GET', 'POST'])
 def messages():
-    return redirect(url_for('messages'))
+    if 'username' in session:
+        if request.method == 'POST':
+            type = request.form.get("type")
+            if (type == "logoutbutton"):
+                session.pop('username')
+                return redirect(url_for('home'))
+            elif (type == "homebutton"):
+                return redirect(url_for('home'))
+            elif (type == "profilebutton"):
+                return redirect(url_for('profile'))
+            elif (type =="matchbutton"):
+                return redirect(url_for('match'))
+        #These two list will be made up of database calls. Index of value in other_users will correspond with the index of messages. Jinja templates will display the last message of the convo on the side.
+        matches = ['Git Clone Topher', 'Your Mom', 'Drake', 'Gojo Satoru']
+        mess_list = [['List of messages 0'], ['List of messages 1'], ['List of messages 2'], ['List of messages 3']]
+        return render_template('messages.html', convos = matches, messages = mess_list)
+    return redirect(url_for('home'))
+##########################################
+@app.route("/match", methods=['GET', 'POST'])
+def match():
+    #Dictionaries will be made up by database calls
+    other_users = [{"user": 'Nobody', "desc": "Nobody is Nowhere", "lang": "Java", "song": 'Nowhere Man'}, {"user": 'Drake', "desc": 'I am not allowed on here', "lang": 'C', :"song": 'Wah Gwan Delilah'}, {"user": 'Gojo Satoru', "desc": 'I alone am the honored one', "lang": 'Python', :"song": 'Skyfall'}]
+    return redirect(url_for('homes'), profiles = other_users)
 if __name__ == "__main__":
     app.debug = True
     app.run()
