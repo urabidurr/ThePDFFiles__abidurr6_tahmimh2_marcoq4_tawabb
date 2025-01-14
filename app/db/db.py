@@ -16,26 +16,36 @@ c = db.cursor()  #facilitate db ops -- you will use cursor to trigger db events
 
 def create():
     # making a table for users
+    c.execute("DROP TABLE IF EXISTS users;")
+    c.execute("DROP TABLE IF EXISTS chat;")
+    c.execute("DROP TABLE IF EXISTS relations;")
     c.execute(
     '''
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE users (
             id INTEGER PRIMARY KEY,
             username TEXT,
             password TEXT,
             description TEXT,
             language TEXT,
             song TEXT
-            rejected INTEGER
-            accepted INTEGER
-            stranger INTEGER
             );
     ''')
 
+    c.execute('''
+        CREATE TABLE relations (
+            id INTEGER,
+            username TEXT,
+            other_id INTEGER,
+            relationship TEXT
+        );
+
+        '''
+    )
 
     # making a table for chat history
     c.execute(
     '''
-    CREATE TABLE IF NOT EXISTS chat (
+    CREATE TABLE chat (
             sender_id INTEGER PRIMARY KEY,
             recipient_id INTEGER,
             content TEXT,
