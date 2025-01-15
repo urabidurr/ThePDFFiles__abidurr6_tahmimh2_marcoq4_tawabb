@@ -139,7 +139,7 @@ def messages():
                 return redirect(url_for('match'))
             else:
                 match = int(type)
-        return render_template('messages.html', matches = users, convos = conversations, convo_open = match)
+        return render_template('messages.html', matches = users, convos = conversations, convo_open = match, user = session['username'])
     return redirect(url_for('home'))
 ##########################################
 @app.route("/match", methods=['GET', 'POST'])
