@@ -11,13 +11,34 @@
     <title>Message</title>
   </head>
   <body>
+    <div class="d-grid gap-3">
+      <form method="POST">
+        <button type="submit" name="type" value="profilebutton" class="btn btn-primary btn-lg">Go to Your Profile</button>
+      </form>
+      <form method="POST">
+        <button type="submit" name="type" value="logoutbutton" class="btn btn-primary btn-lg">Logout</button>
+      </form>
+      <form method="POST">
+        <button type="submit" name="type" value="matchbutton" class="btn btn-primary btn-lg">Match With Others</button>
+      </form>
+      <form method="POST">
+        <button type="submit" name="type" value="messagesbutton" class="btn btn-primary btn-lg">Messages</button>
+      </form>
+    </div>
     <h1 class="text-3xl font-bold underline">
       Direct Messages
     </h1>
-    {% for convo in convos %}
-    <p>{{username}}</p>
-    <p>{{messages[-1]}}</p>
-    {% end for %}
+    {% for n in range(matches|length) %}
+    <form method="POST">
+      <button type="submit" name="type" value="{{n}}" class="btn btn-primary btn-lg">{{matches[n]}}</button>
+    </form>
+    {% endfor %}
+    {% if convo_open > -1 %}
+      {% for message in convos[convo_open] %}
+        <h2>{{message.get("sender")}}</h2>
+        <p>{{message.get("text")}}<sub>{{message.get("time sent")}}</sub></p>
+      {% endfor %}
+    {% endif %}
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

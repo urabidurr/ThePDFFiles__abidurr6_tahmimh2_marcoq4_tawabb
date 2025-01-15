@@ -69,8 +69,9 @@ def signup():
         if (type == "signupenter"):
             username = request.form.get("user")
             password = request.form.get("password")
+            #Comment from DMQ: SHOULDN'T THIS BE A FUNCTION IN db.py THAT IS CALLED IN THIS FILE?
             #ADD TO DATABASE
-            c.execute("SELECT id FROM users;")
+            '''c.execute("SELECT id FROM users;")
             num = c.fetchall()
 
             c.execute("INSERT INTO users (id, username, password) VALUES (?, ?, ?);",
@@ -82,7 +83,7 @@ def signup():
             c.execute("SELECT * FROM users")
             prin = c.fetchall()
             print("users: ")
-            print(prin)
+            print(prin)'''
 
             session['username'] = username
             return redirect(url_for('home'))
@@ -94,6 +95,17 @@ def signup():
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
     if 'username' in session:
+        if request.method == 'POST':
+            type = request.form.get("type")
+            if (type == "logoutbutton"):
+                session.pop('username')
+                return redirect(url_for('home'))
+            elif (type == "homebutton"):
+                return redirect(url_for('home'))
+            elif (type =="messagesbutton"):
+                return redirect(url_for('messages'))
+            elif (type =="matchbutton"):
+                return redirect(url_for('match'))
         username = session['username']
         description = "I am the guy."
         coding_lang = "NetLogo"
@@ -103,7 +115,40 @@ def profile():
 ##########################################
 @app.route("/messages", methods=['GET', 'POST'])
 def messages():
-    return redirect(url_for('messages'))
+
+    if 'username' in session:
+        match = -1
+        #These two list will be made up of database calls. Index of value in other_users will correspond with the index of messages. Jinja templates will display the last message of the convo on the side.
+        users = ['Git Clone Topher', 'Nobody', 'Drake', 'Gojo Satoru']
+        #This is a 2d list containing the message histories.
+        conversation0 = [{"sender": session['username'], "text": "Hi", "time sent": "10:45 AM"}, {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46 AM"}]
+        conversation1 = [{"sender": session['username'], "text": "New phone who dis?", "time sent": "11:00 PM"}, {"sender": "Nobody", "text": "Nobody", "time sent": "11:05 PM"}]
+        conversation2 = [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15 AM"}, {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15 AM"}, {"sender": "Drake", "text": ";(", "time sent": "9:15 AM"}]
+        conversation3 = []
+        conversations = [conversation0, conversation1, conversation2, conversation3]
+        if request.method == 'POST':
+            type = request.form.get("type")
+            if (type == "logoutbutton"):
+                session.pop('username')
+                return redirect(url_for('home'))
+            elif (type == "homebutton"):
+                return redirect(url_for('home'))
+            elif (type == "profilebutton"):
+                return redirect(url_for('profile'))
+            elif (type == "matchbutton"):
+                return redirect(url_for('match'))
+            else:
+                match = int(type)
+        return render_template('messages.html', matches = users, convos = conversations, convo_open = match)
+    return redirect(url_for('home'))
+##########################################
+@app.route("/match", methods=['GET', 'POST'])
+def match():
+    if 'username' in session:
+        #Dictionaries will be made up by database calls
+        other_users = [{"user": 'Nobody', "desc": "Nobody got you the way I do", "lang": "Java", "song": 'Nobodys'}, {"user": 'Drake', "desc": 'I am not allowed on here', "lang": 'C', "song": 'Wah Gwan Delilah'}, {"user": 'Gojo Satoru', "desc": 'I alone am the honored one', "lang": 'Python', "song": 'Skyfall'}]
+        return render_template('match.html', profiles = other_users)
+    return redirect(url_for('home'))
 if __name__ == "__main__":
     app.debug = True
     app.run()
