@@ -61,21 +61,26 @@
     {% for convo in convos %}
     <p>{{username}}</p>
     <p>{{messages[-1]}}</p>
+    {% end for %}
+
     <main class="content">
     <div class="container p-0">
 		<div class="card">
 			<div class="row g-0">
 				<div class="col-12 col-lg-5 col-xl-3 border-right">
+          {% for n in range(matches|length) %}
 
 
 
 					<a href="#" class="list-group-item list-group-item-action border-0">
 						<div class="d-flex align-items-start">
 							<div class=" ml-3">
-								{{username}}
+								{{matches[n]}}
 							</div>
 						</div>
 					</a>
+          {% end for %}
+
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
 				<div class="col-12 col-lg-7 col-xl-9">
@@ -92,20 +97,48 @@
 							</div>
 						</div>
 					</div>
+
           <section>
 					<div class="position-relative">
-						<div class="chat-messages p-4">
+            <div class="chat-messages p-4">
 
-							<div class="chat-message-right pb-4">
-								<div>
-								</div>
-								<div class="bg-light rounded py-2 px-3 mr-3">
-									<div class="font-weight-bold mb-1">You</div>
-									{{messages[-1]}}
-								</div>
-							</div>
-						</div>
-					</div>
+          {% if convo_open > -1 %}
+               {% for message in convos[convo_open] %}
+               {% if message.get("sender") == user}
+
+     							<div class="chat-message-right pb-4">
+     								<div>
+                      <div>
+									           <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
+									            <div class="text-muted small text-nowrap mt-2">{{message.get("time sent")}}</div>
+								        </div>
+     								</div>
+
+     								<div class="bg-light rounded py-2 px-3 mr-3">
+     									<div class="font-weight-bold mb-1">You</div>
+                      {{message.get("text")}}
+     								</div>
+     							</div>
+     						</div>
+     					</div>
+
+                 {% endif %}
+                 {% if message.get("sender") != user}
+                 <div class="chat-message-left pb-4">
+       								<div>
+       									<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
+       									<div class="text-muted small text-nowrap mt-2">{{message.get("time sent")}}</div>
+       								</div>
+       								<div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
+       									<div class="font-weight-bold mb-1">{{message.get("sender")}}</div>
+                        {{message.get("text")}}
+       								</div>
+       							</div>
+                 {% endif %}
+               {% endfor %}
+             {% endif %}
+
+
 
 					<div class="flex-grow-0 py-3 px-4 border-top">
 						<div class="input-group">
@@ -120,7 +153,6 @@
 	</div>
 </main>
 </section>
-{% end for %}
 
 
 
