@@ -25,20 +25,32 @@ marcoQ -- 2025-01-09 10:59
 abidurR -- 2025-01-11 22:23
 * resolved database importing issue in __init__.py
 
-tawabB -- 2024-01-13 11:01
+tawabB -- 2025-01-13 11:01
 * worked more on databse, incorporated it in main __init file
 
-tawabB -- 2024-01-14 11:01
+tawabB -- 2025-01-14 11:01
 * db login works
 
-abidurR -- 2024-01-14 11:01
+abidurR -- 2025-01-14 11:01
 * implemented character API
 * card for matches
 
-tahmimH -- 2024-01-14 11:01
+tahmimH -- 2025-01-14 11:01
 * messages template for html
 * worked on home template
 
-marcoQ -- 2024-01-14 16:37
+marcoQ -- 2025-01-14 16:37
 * messages page now shows specific conversation history
 * basic routing for match page
+
+tawabB -- 2025-01-15 11:01
+* made tweaks to login for database
+
+tahmimH -- 2025-01-15 11:01
+* worked on merging changes to messages.html
+
+marcoQ -- 2025-01-15 11:01
+* helped DTH with changes to messages.html
+
+abidurR -- 2025-01-15 11:01
+* worked on more characters with API
