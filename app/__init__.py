@@ -130,38 +130,37 @@ def profile():
         return render_template('profile.html', user = username, desc = description, pref_lang = coding_lang, pref_song = song)
     return redirect(url_for('home'))
 ##########################################
-match = -1
+other_user = -1
 @app.route("/messages", methods=['GET', 'POST'])
 def messages():
-    global match
+    global other_user
     if 'username' in session:
         #These two list will be made up of database calls. Index of value in other_users will correspond with the index of messages. Jinja templates will display the last message of the convo on the side.
         users = ['Git Clone Topher', 'Nobody', 'Drake', 'Gojo Satoru']
         #This is a 2d list containing the message histories.
-        print(match)
         conversations = [[{"sender": session['username'], "text": "Hi", "time sent": "10:45"}, {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46"}], [{"sender": session['username'], "text": "New phone who dis?", "time sent": "23:00"}, {"sender": "Nobody", "text": "Nobody", "time sent": "23:05"}], [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15"}, {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"}, {"sender": "Drake", "text": ";(", "time sent": "9:15"}], []]
         if request.method == 'POST':
             type = request.form.get("type")
             if (type == "logoutbutton"):
-                match = -1
+                other_user = -1
                 session.pop('username')
                 return redirect(url_for('home'))
             elif (type == "homebutton"):
-                match = -1
+                other_user = -1
                 return redirect(url_for('home'))
             elif (type == "profilebutton"):
-                match = -1
+                other_user = -1
                 return redirect(url_for('profile'))
             elif (type == "matchbutton"):
-                match = -1
+                other_user = -1
                 return redirect(url_for('match'))
             elif (type == "sendbutton"):
                 message = request.form.get("usermessage")
                 time_sent = datetime.datetime.now().strftime("%H:%M")
-                conversations[match].append({"sender": session["username"], "text": message, "time sent": time_sent})
+                conversations[other_user].append({"sender": session["username"], "text": message, "time sent": time_sent})
             else:
-                match = int(type)
-        return render_template('messages.html', matches = users, convos = conversations, convo_open = match, user = session['username'])
+                other_user = int(type)
+        return render_template('messages.html', matches = users, convos = conversations, convo_open = other_user, user = session['username'])
     return redirect(url_for('home'))
 ##########################################
 @app.route("/match", methods=['GET', 'POST'])
