@@ -53,3 +53,5 @@ def create():
             date_sent TEXT
             );
     ''')
+    db.commit()
+    db.close()
