@@ -47,11 +47,19 @@ def login():
             username = request.form.get("user")
             password = request.form.get("password")
             #CHECK IF VALID WITH DATABASE
-            session['username'] = username
-            return redirect(url_for('home'))
+
+            c.execute("SELECT password FROM users WHERE username = ?", (username,))
+            passw = c.fetchone()
+            #print(passw)
+            try:
+                if (passw and passw[0] == password):
+                    session['username'] = username
+                    return redirect(url_for('home'))
+            except:
         #RETURN BACK HOME BUTTON
-        if (type == "returnhome"):
-            return redirect(url_for('home'))
+                if (type == "returnhome"):
+                    return redirect(url_for('home'))
+                return redirect(url_for('home'))
 
     #IF LOGGED IN
     if 'username' in session:
@@ -67,7 +75,8 @@ def signup():
         type = request.form.get("type")
         #SIGN UP BUTTON
         if (type == "signupenter"):
-            username = request.form.get("user")
+            username = request.form.get("name")
+            #print(username)
             password = request.form.get("password")
             #Comment from DMQ: SHOULDN'T THIS BE A FUNCTION IN db.py THAT IS CALLED IN THIS FILE?
             #ADD TO DATABASE
@@ -77,8 +86,16 @@ def signup():
             c.execute("INSERT INTO users (id, username, password) VALUES (?, ?, ?);",
             (len(num), username, password))
 
-            print("USER IDS:")
-            print(num)
+            print(len(num))
+            for user in range(len(num)):
+                c.execute("INSERT INTO relations (other_id, relationship) VALUES (?, ?);", (len(num), "stranger"))
+                print(1)
+                c.execute("SELECT * FROM relations")
+                print(2)
+                pri = c.fetchall()
+                print(pri)
+            #print("USER IDS:")
+            #print(num)
 
             c.execute("SELECT * FROM users")
             prin = c.fetchall()
