@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="styling.css">
     <title>Message</title>
     <style>
-    body{margin-top:20px;}
+    body{
+      margin-top:20px;
+      background-color: #642e7e;
+    }
 
 .chat-online {
     color: #34ce57
@@ -25,11 +28,7 @@
     overflow-y: scroll
 }
 
-.chat-message-left,
-.chat-message-right {
-    display: flex;
-    flex-shrink: 0
-}
+
 
 .chat-message-left {
     margin-right: auto
@@ -39,35 +38,53 @@
     flex-direction: row-reverse;
     margin-left: auto
 }
-.py-3 {
-    padding-top: 1rem!important;
-    padding-bottom: 1rem!important;
-}
-.px-4 {
-    padding-right: 1.5rem!important;
-    padding-left: 1.5rem!important;
-}
-
-.border-top {
-    border-top: 1px solid #dee2e6!important;
-} </style>
+</style>
   </head>
   <body>
-    <div class="d-grid gap-3">
-      <form method="POST">
-        <button type="submit" name="type" value="profilebutton" class="btn btn-primary btn-lg">Go to Your Profile</button>
-      </form>
-      <form method="POST">
-        <button type="submit" name="type" value="logoutbutton" class="btn btn-primary btn-lg">Logout</button>
-      </form>
-      <form method="POST">
-        <button type="submit" name="type" value="matchbutton" class="btn btn-primary btn-lg">Match With Others</button>
-      </form>
-      <form method="POST">
-        <button type="submit" name="type" value="messagesbutton" class="btn btn-primary btn-lg">Messages</button>
-      </form>
+    <div>
+
     </div>
-    <h1 class="text-3xl font-bold underline">
+    <div>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="https://via.placeholder.com/30" alt="Devuzz" class="me-2"> Devuzz
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse navbar-inverse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="https://github.com/AndyShyklo/bombSquad__andys103_abidurr6_chongtianm_tawabb/tree/370809bfd3aa69a4f95aa47701ac20ad9447f984">Find Topher</a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link active" href="/profile">Your Profile</a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link active" href="/messages">See your messages! </a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link active" href="/Match">Find your Driver</a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link active" href="/logout">Logout ;c</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled">Becuzz a Devuzz Golduzz</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+  </div>
+
+    <h1 class="text-3xl font-bold underline text-center">
       Direct Messages
     </h1>
 
@@ -150,10 +167,12 @@
 
 
 
-					<div class="flex-grow-0 py-3 px-4 border-top">
+					<div class="py-3 px-4 border-top">
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Type your message">
-							<button class="btn btn-primary">Send</button>
+              <form method="POST">
+  							<input type="text" class="form-control" name = "usermessage"placeholder="Type your message">
+  							<button class="btn btn-primary" name = "type" value = "sendbutton">Send</button>
+              </form>
 						</div>
 					</div>
 

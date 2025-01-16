@@ -4,19 +4,19 @@ marcoQ -- 2025-01-08 23:31
 tawabB -- 2025-01-09 10:24
 * Renamed design document name in accordance with topher's guidelines
 
-tahmimH -- 2024-01-09 10:30
+tahmimH -- 2025-01-09 10:30
 *added branch and started working base templates
 
 abidurR -- 2025-01-09 10:37
 * Pull requested from DMQ's branch; carried over __init__.py code to main branch
 
-tawabB -- 2024-01-09 10:59
+tawabB -- 2025-01-09 10:59
 * initialized several database tables for later use
 
-tahmimH -- 2024-01-10 10:58
+tahmimH -- 2025-01-10 10:58
 *decided to switch to Bootstrap as it worked better for our group
 
-tawabB -- 2024-01-10 10:58
+tawabB -- 2025-01-10 10:58
 * completed databases and begun integration into main app file
 
 marcoQ -- 2025-01-09 10:59
@@ -55,8 +55,12 @@ marcoQ -- 2025-01-15 11:01
 abidurR -- 2025-01-15 11:01
 * worked on more characters with API
 
-tawabB -- 2024-01-15 11:03
+tawabB -- 2025-01-15 11:03
 * worked on login
+
+tahmimH --2025-01-16 1:40
+*added styling for navbars not complete but added profile page as well
 
 tawab -- 2025-01-16 11:00
 * added db functions on db.py
+
