@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="styling.css">
     <title>Message</title>
     <style>
-    body{margin-top:20px;}
+    body{
+      margin-top:20px;
+      background-color: #642e7e;
+    }
 
 .chat-online {
     color: #34ce57
@@ -25,11 +28,7 @@
     overflow-y: scroll
 }
 
-.chat-message-left,
-.chat-message-right {
-    display: flex;
-    flex-shrink: 0
-}
+
 
 .chat-message-left {
     margin-right: auto
@@ -39,20 +38,12 @@
     flex-direction: row-reverse;
     margin-left: auto
 }
-.py-3 {
-    padding-top: 1rem!important;
-    padding-bottom: 1rem!important;
-}
-.px-4 {
-    padding-right: 1.5rem!important;
-    padding-left: 1.5rem!important;
-}
-
-.border-top {
-    border-top: 1px solid #dee2e6!important;
-} </style>
+</style>
   </head>
   <body>
+    <div>
+
+    </div>
     <div>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -62,38 +53,38 @@
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-      
-          <div class="collapse navbar-collapse" id="navbarContent">
+
+          <div class="collapse navbar-collapse navbar-inverse" id="navbarContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="https://github.com/AndyShyklo/bombSquad__andys103_abidurr6_chongtianm_tawabb/tree/370809bfd3aa69a4f95aa47701ac20ad9447f984">Find Topher</a>
+                <a class="nav-link active" href="https://github.com/AndyShyklo/bombSquad__andys103_abidurr6_chongtianm_tawabb/tree/370809bfd3aa69a4f95aa47701ac20ad9447f984">Find Topher</a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link active" href="/profile">Your Profile</a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link active" href="/messages">See your messages! </a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link active" href="/Match">Find your Driver</a>
+              </li>
+              <li class = "nav-item">
+                <a class="nav-link active" href="/logout">Logout ;c</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link disabled">Becuzz a Devuzz Golduzz</a>
               </li>
             </ul>
-            <form class="d-flex" method="POST">
-              <button type="submit" name="type" value="profilebutton" class="btn btn-outline-primary me-2">Go to Your Profile</button>
-            </form>
-            <form class="d-flex" method="POST">
-              <button type="submit" name="type" value="logoutbutton" class="btn btn-outline-secondary me-2">Logout</button>
-            </form>
-            <form class="d-flex" method="POST">
-              <button type="submit" name="type" value="matchbutton" class="btn btn-outline-success me-2">Match With Others</button>
-            </form>
-            <form class="d-flex" method="POST">
-              <button type="submit" name="type" value="messagesbutton" class="btn btn-outline-info">Messages</button>
-            </form>
           </div>
         </div>
       </nav>
-      
+
   </div>
-    
-    <h1 class="text-3xl font-bold underline">
+
+    <h1 class="text-3xl font-bold underline text-center">
       Direct Messages
     </h1>
 
@@ -176,7 +167,7 @@
 
 
 
-					<div class="flex-grow-0 py-3 px-4 border-top">
+					<div class="py-3 px-4 border-top">
 						<div class="input-group">
               <form method="POST">
   							<input type="text" class="form-control" name = "usermessage"placeholder="Type your message">
