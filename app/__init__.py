@@ -109,8 +109,10 @@ def signup():
             return redirect(url_for('home'))
     return render_template('signup.html')
 ##########################################
+edit_mode = False
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
+    global edit_mode
     if 'username' in session:
         if request.method == 'POST':
             type = request.form.get("type")
@@ -123,11 +125,14 @@ def profile():
                 return redirect(url_for('messages'))
             elif (type =="matchbutton"):
                 return redirect(url_for('match'))
+            elif (type =="editbutton"):
+                edit_mode = True
         username = session['username']
         description = "I am the guy."
         coding_lang = "NetLogo"
         song = "Everybody Wants to Rule the World"
-        return render_template('profile.html', user = username, desc = description, pref_lang = coding_lang, pref_song = song)
+        pfp = "/static/devo_pfp.png"
+        return render_template('profile.html', user = username, desc = description, pref_lang = coding_lang, pref_song = song, image = pfp, edit = edit_mode)
     return redirect(url_for('home'))
 ##########################################
 other_user = -1

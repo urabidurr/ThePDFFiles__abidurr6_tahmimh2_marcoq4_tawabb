@@ -14,7 +14,7 @@
     <div class="ui-bg-overlay bg-dark opacity-50"></div>
     <div class="container">
       <div class="text-center py-5">
-        <img src= {{ Placeholder image}} alt="" class="ui-w-100 rounded-circle">
+        <img src= "{{image}}" alt="" class="ui-w-100 rounded-circle">
 
         <div class="col-md-8 col-lg-6 col-xl-5 p-0 mx-auto">
           <h4 class="font-weight-bold my-4">{{user}}</h4>
@@ -29,6 +29,9 @@
           <p class="opacity-75">Favorite Song: <strong>{{pref_song}}</strong></p>
         </div>
 
+        <form class="d-flex" method="POST">
+          <button type="submit" name="type" value="editbutton" class="btn btn-outline-success me-2">Edit Profile</button>
+        </form>
         <div class="mt-4">
           <a href="/" class="btn btn-primary">Return to Homepage</a>
         </div>
