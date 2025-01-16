@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, session, request, redirect
-import os, json, urllib.request, sqlite3
+import os, json, urllib.request, sqlite3, datetime
 from db import db
 
 app = Flask(__name__)
@@ -47,11 +47,19 @@ def login():
             username = request.form.get("user")
             password = request.form.get("password")
             #CHECK IF VALID WITH DATABASE
-            session['username'] = username
-            return redirect(url_for('home'))
+
+            c.execute("SELECT password FROM users WHERE username = ?", (username,))
+            passw = c.fetchone()
+            #print(passw)
+            try:
+                if (passw and passw[0] == password):
+                    session['username'] = username
+                    return redirect(url_for('home'))
+            except:
         #RETURN BACK HOME BUTTON
-        if (type == "returnhome"):
-            return redirect(url_for('home'))
+                if (type == "returnhome"):
+                    return redirect(url_for('home'))
+                return redirect(url_for('home'))
 
     #IF LOGGED IN
     if 'username' in session:
@@ -67,7 +75,8 @@ def signup():
         type = request.form.get("type")
         #SIGN UP BUTTON
         if (type == "signupenter"):
-            username = request.form.get("user")
+            username = request.form.get("name")
+            #print(username)
             password = request.form.get("password")
             #Comment from DMQ: SHOULDN'T THIS BE A FUNCTION IN db.py THAT IS CALLED IN THIS FILE?
             #ADD TO DATABASE
@@ -77,8 +86,16 @@ def signup():
             c.execute("INSERT INTO users (id, username, password) VALUES (?, ?, ?);",
             (len(num), username, password))
 
-            print("USER IDS:")
-            print(num)
+            print(len(num))
+            for user in range(len(num)):
+                c.execute("INSERT INTO relations (other_id, relationship) VALUES (?, ?);", (len(num), "stranger"))
+                print(1)
+                c.execute("SELECT * FROM relations")
+                print(2)
+                pri = c.fetchall()
+                print(pri)
+            #print("USER IDS:")
+            #print(num)
 
             c.execute("SELECT * FROM users")
             prin = c.fetchall()
@@ -113,33 +130,37 @@ def profile():
         return render_template('profile.html', user = username, desc = description, pref_lang = coding_lang, pref_song = song)
     return redirect(url_for('home'))
 ##########################################
+other_user = -1
 @app.route("/messages", methods=['GET', 'POST'])
 def messages():
-
+    global other_user
     if 'username' in session:
-        match = -1
         #These two list will be made up of database calls. Index of value in other_users will correspond with the index of messages. Jinja templates will display the last message of the convo on the side.
         users = ['Git Clone Topher', 'Nobody', 'Drake', 'Gojo Satoru']
         #This is a 2d list containing the message histories.
-        conversation0 = [{"sender": session['username'], "text": "Hi", "time sent": "10:45 AM"}, {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46 AM"}]
-        conversation1 = [{"sender": session['username'], "text": "New phone who dis?", "time sent": "11:00 PM"}, {"sender": "Nobody", "text": "Nobody", "time sent": "11:05 PM"}]
-        conversation2 = [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15 AM"}, {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15 AM"}, {"sender": "Drake", "text": ";(", "time sent": "9:15 AM"}]
-        conversation3 = []
-        conversations = [conversation0, conversation1, conversation2, conversation3]
+        conversations = [[{"sender": session['username'], "text": "Hi", "time sent": "10:45"}, {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46"}], [{"sender": session['username'], "text": "New phone who dis?", "time sent": "23:00"}, {"sender": "Nobody", "text": "Nobody", "time sent": "23:05"}], [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15"}, {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"}, {"sender": "Drake", "text": ";(", "time sent": "9:15"}], []]
         if request.method == 'POST':
             type = request.form.get("type")
             if (type == "logoutbutton"):
+                other_user = -1
                 session.pop('username')
                 return redirect(url_for('home'))
             elif (type == "homebutton"):
+                other_user = -1
                 return redirect(url_for('home'))
             elif (type == "profilebutton"):
+                other_user = -1
                 return redirect(url_for('profile'))
             elif (type == "matchbutton"):
+                other_user = -1
                 return redirect(url_for('match'))
+            elif (type == "sendbutton"):
+                message = request.form.get("usermessage")
+                time_sent = datetime.datetime.now().strftime("%H:%M")
+                conversations[other_user].append({"sender": session["username"], "text": message, "time sent": time_sent})
             else:
-                match = int(type)
-        return render_template('messages.html', matches = users, convos = conversations, convo_open = match, user = session['username'])
+                other_user = int(type)
+        return render_template('messages.html', matches = users, convos = conversations, convo_open = other_user, user = session['username'])
     return redirect(url_for('home'))
 ##########################################
 @app.route("/match", methods=['GET', 'POST'])
