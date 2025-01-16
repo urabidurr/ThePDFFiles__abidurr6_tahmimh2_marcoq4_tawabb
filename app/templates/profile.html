@@ -10,19 +10,30 @@
     <link rel="stylesheet" href="styling.css">
     <title>Profile</title>
   </head>
-  <body>
-    <h1 class="text-3xl font-bold underline">
-      This is the profile of {{user}}.
-    </h1>
-    <h3>{{desc}}</h3>
-    <br>
-    <h3>{{pref_lang}}</h3>
-    <br>
-    <h3>{{pref_song}}</h3>
-    <br>
-    <a href="/">
-      <button type="submit" name="type" value="returnhome">Return to Homepage</button>
-    </a>
+  <body class="bg-dark text-white">
+    <div class="ui-bg-overlay bg-dark opacity-50"></div>
+    <div class="container">
+      <div class="text-center py-5">
+        <img src= {{ Placeholder image}} alt="" class="ui-w-100 rounded-circle">
+
+        <div class="col-md-8 col-lg-6 col-xl-5 p-0 mx-auto">
+          <h4 class="font-weight-bold my-4">{{user}}</h4>
+
+          <div class="opacity-75 mb-4">
+            {{desc}}
+          </div>
+        </div>
+
+        <div class="text-center">
+          <p class="opacity-75 mb-2">Preferred Language: <strong>{{pref_lang}}</strong></p>
+          <p class="opacity-75">Favorite Song: <strong>{{pref_song}}</strong></p>
+        </div>
+
+        <div class="mt-4">
+          <a href="/" class="btn btn-primary">Return to Homepage</a>
+        </div>
+      </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

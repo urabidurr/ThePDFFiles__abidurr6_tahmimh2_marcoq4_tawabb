@@ -53,20 +53,46 @@
 } </style>
   </head>
   <body>
-    <div class="d-grid gap-3">
-      <form method="POST">
-        <button type="submit" name="type" value="profilebutton" class="btn btn-primary btn-lg">Go to Your Profile</button>
-      </form>
-      <form method="POST">
-        <button type="submit" name="type" value="logoutbutton" class="btn btn-primary btn-lg">Logout</button>
-      </form>
-      <form method="POST">
-        <button type="submit" name="type" value="matchbutton" class="btn btn-primary btn-lg">Match With Others</button>
-      </form>
-      <form method="POST">
-        <button type="submit" name="type" value="messagesbutton" class="btn btn-primary btn-lg">Messages</button>
-      </form>
-    </div>
+    <div>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="https://via.placeholder.com/30" alt="Devuzz" class="me-2"> Devuzz
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://github.com/AndyShyklo/bombSquad__andys103_abidurr6_chongtianm_tawabb/tree/370809bfd3aa69a4f95aa47701ac20ad9447f984">Find Topher</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled">Becuzz a Devuzz Golduzz</a>
+              </li>
+            </ul>
+            <form class="d-flex" method="POST">
+              <button type="submit" name="type" value="profilebutton" class="btn btn-outline-primary me-2">Go to Your Profile</button>
+            </form>
+            <form class="d-flex" method="POST">
+              <button type="submit" name="type" value="logoutbutton" class="btn btn-outline-secondary me-2">Logout</button>
+            </form>
+            <form class="d-flex" method="POST">
+              <button type="submit" name="type" value="matchbutton" class="btn btn-outline-success me-2">Match With Others</button>
+            </form>
+            <form class="d-flex" method="POST">
+              <button type="submit" name="type" value="messagesbutton" class="btn btn-outline-info">Messages</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+      
+  </div>
+    
     <h1 class="text-3xl font-bold underline">
       Direct Messages
     </h1>
