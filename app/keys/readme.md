@@ -6,7 +6,7 @@ API Key Status: Uploaded and Active
 Obtain Method: 
 
 Log In Via Email
-This code asks the user for their email address and sends them a confirmation link. The user then enters the link they received in their email and is given a token for their account
+This code asks the user for their email address and sends them a confirmation link. The user then enters the link they received in their email and is given a token for their account.
 
     from characterai import aiocai, sendCode, authUser
 
