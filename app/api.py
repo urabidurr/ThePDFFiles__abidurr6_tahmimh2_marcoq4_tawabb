@@ -2,8 +2,17 @@ from characterai import aiocai
 import asyncio
 import requests
 
+uList = []
+
+
+def p(text):
+    uList.append(text)
+    print(uList)
+    
+
 async def main():
-    char = input('CHAR ID: ')
+    uList.clear()
+    char = "6cfnxCukeMpNyVmQ-bIbR9_X3k95XDk1lm3Buot6AiM"
 
     client = aiocai.Client('d617adf0297d7f83c25b75f94066db8b1a90a0ec')
 
@@ -17,7 +26,7 @@ async def main():
         print(f'{answer.name}: {answer.text}')
         
         while True:
-            text = input('YOU: ')
+            text = "hello"
 
             message = await chat.send_message(
                 char, new.chat_id, text
@@ -25,4 +34,4 @@ async def main():
 
             print(f'{message.name}: {message.text}')
 
-asyncio.run(main())
+# asyncio.run(main())
