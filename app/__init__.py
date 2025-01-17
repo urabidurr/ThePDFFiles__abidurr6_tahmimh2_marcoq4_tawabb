@@ -50,10 +50,14 @@ def login():
             password = request.form.get("password")
             #CHECK IF VALID WITH DATABASE
             print("LOGIN get username " + str(db.getUserID(username)))
-            print(db.getUserID(username) is not None)
-            print(db.getPassword(username)[0])
-            print("LOGIN check password" + str(db.getPassword(username)[0]==password))
-            if ((db.getUserID(username) is not None) and (db.getPassword(username)[0]==password)):
+            #print(db.getUserID(username) is not None)
+            #print(db.getPassword(username)[0])
+            #print("LOGIN check password" + str(db.getPassword(username)[0]==password))
+            print("len username: " + str(len(username)))
+            print("len password: " + str(len(password)))
+            if (len(username) < 1 or len(password) < 1):
+                flash("Insufficient characters in username or password. Try again.")
+            elif ((db.getUserID(username) is not None) and (db.getPassword(username)[0]==password)):
                 session['username'] = username
                 print("LOGIN CORRECT")
                 return redirect(url_for('home'))
@@ -84,12 +88,13 @@ def signup():
             #Comment from DMQ: SHOULDN'T THIS BE A FUNCTION IN db.py THAT IS CALLED IN THIS FILE?
             #ADD TO DATABASE
             print("SIGNUP get username" + str(db.getUserID(username)))
-            if ((db.getUserID(username) is None)):
+            if (len(username) < 1 or len(password) < 1):
+                flash("Insufficient characters in username or password. Try again.")
+            elif ((db.getUserID(username) is None)):
                 db.createuser(username, password)
                 session['username'] = username
             else:
                 flash("Username is already taken. Please try a different username")
-            return redirect(url_for('home'))
         #RETURN BACK HOME BUTTON
         if (type == "returnhome"):
             return redirect(url_for('home'))
@@ -144,15 +149,15 @@ def messages():
     global other_user
     if 'username' in session:
         users = ['Git Clone Topher', 'Nobody', 'Drake', 'Gojo Satoru']
-        conversations = [[{"sender": session['username'], "text": "Hi", "time sent": "10:45"}, 
+        conversations = [[{"sender": session['username'], "text": "Hi", "time sent": "10:45"},
                          {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46"}],
-                        [{"sender": session['username'], "text": "New phone who dis?", "time sent": "23:00"}, 
+                        [{"sender": session['username'], "text": "New phone who dis?", "time sent": "23:00"},
                          {"sender": "Nobody", "text": "Nobody", "time sent": "23:05"}],
-                        [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15"}, 
-                         {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"}, 
+                        [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15"},
+                         {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"},
                          {"sender": "Drake", "text": ";(", "time sent": "9:15"}],
                         []]
-        
+
         if request.method == 'POST':
             type = request.form.get("type")
             if (type == "logoutbutton"):
@@ -173,7 +178,7 @@ def messages():
                 if message and message.strip():
                     time_sent = datetime.datetime.now().strftime("%H:%M")
                     conversations[other_user].append({"sender": session["username"],"text": message,"time-sent": time_sent})
-                    
+
                     try:
                         char_id = CHARACTER_IDS.get(users[other_user])
                         if char_id:
@@ -181,7 +186,7 @@ def messages():
                             loop = asyncio.new_event_loop()
                             asyncio.set_event_loop(loop)
                             ai_name, ai_response = loop.run_until_complete(send_message(char_id, message, session_id))
-                            loop.close()                            
+                            loop.close()
                             conversations[other_user].append({"sender": users[other_user], "text": ai_response, "time-sent": datetime.datetime.now().strftime("%H:%M")})
                     except Exception as e:
                         print(f"Error getting AI response: {e}")

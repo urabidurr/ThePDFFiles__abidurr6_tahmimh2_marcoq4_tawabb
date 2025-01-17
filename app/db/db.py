@@ -94,6 +94,7 @@ def getPassword(username):
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     c.execute("SELECT password FROM users WHERE username = ?", (username,))
     pw = c.fetchall()
+    print(pw)
     dbase.commit()
     dbase.close()
     return pw[0]

@@ -17,11 +17,9 @@
       <!--may need to adjust for if login error (incorrect username/password)-->
       {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <ul>
                 {% for message in messages %}
-                    <li>{{ message }}</li>
+                    <p class="flashes">{{ message }}</p>
                 {% endfor %}
-            </ul>
         {% endif %}
       {% endwith %}
       <form method="POST">
