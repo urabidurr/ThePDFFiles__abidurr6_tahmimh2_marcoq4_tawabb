@@ -10,7 +10,11 @@
 </head>
 
 <body>
-  <ion-icon id="dislike" name="heart-dislike"></ion-icon>
+  <div class ="icon-container">
+    <ion-icon id="dislike" name="compass-outline"></ion-icon>
+    <h1>Git Push</h1>
+  </div>
+
   <div id="swiper">
     {% for profile in profiles %}
     <div class="card" style="--i:{{ loop.index0 }}">
@@ -31,8 +35,12 @@
     </div>
     {% endfor %}
   </div>
-  <ion-icon id="like" name="heart"></ion-icon>
-  
+
+  <div class="icon-container">
+    <ion-icon id="like" name="car-outline"></ion-icon>
+    <h1>Git Pull</h1>
+  </div>
+
   <script src="../static/js/card.js"></script>
   <script src="../static/js/script.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
