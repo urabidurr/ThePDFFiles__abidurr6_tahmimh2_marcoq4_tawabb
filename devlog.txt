@@ -61,8 +61,12 @@ tawabB -- 2025-01-15 11:03
 tahmimH --2025-01-16 1:40
 *added styling for navbars not complete but added profile page as well
 
-tawab -- 2025-01-16 11:00
+tawabB -- 2025-01-16 11:00
 * added db functions on db.py
 
 tawabB -- 2025-01-16 19:53
 * added editUserData function on db.py
+
+marcoQ -- 2025-01-16 22:00
+* added edit user profile routing and buttons on html
+* added login and signup routing
