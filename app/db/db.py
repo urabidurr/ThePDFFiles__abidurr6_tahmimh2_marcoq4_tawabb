@@ -73,6 +73,7 @@ def createuser(username, password):
         )
         dbase.commit()
         dbase.close()
+
 def getUserID(username):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
@@ -82,12 +83,6 @@ def getUserID(username):
     if row == None:
         return None
     return row[0]
-
-def verifyUser(username, password):
-    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
-    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
-    return c.fetchone() is not None
 
 def getPassword(username):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
@@ -119,7 +114,7 @@ def getMessageData(sender_id, recipient_id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     dict = {}
-    c.execute("SELECT (content, message_id, date_sent) FROM chat WHERE (sender_id, recipient_id) = (?, ?)", (sender_id, recipient_id))
+    c.execute("SELECT content, message_id, date_sent FROM chat WHERE sender_id, recipient_id = ?, ?", (sender_id, recipient_id))
     ret = c.fetchall()
     print(ret) #DIAGNOSTIC PRINT STATEMENT
     dict['content'] = ret[0]
@@ -132,9 +127,9 @@ def getMessageData(sender_id, recipient_id):
 def addMessage(sender_id, recipient_id, content, date_sent):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("SELECT * FROM chat WHERE (sender_id, recipient_id) = (?, ?)", (sender_id, recipient_id))
+    c.execute("SELECT * FROM chat WHERE sender_id, recipient_id = ?, ?", (sender_id, recipient_id))
     l = len(c.fetchall())
-    c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES = (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, l, date_sent))
+    c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, l, date_sent))
     print("message added") #DIAGNOSTIC PRINT STATEMENT
     dbase.commit()
     dbase.close()
@@ -145,3 +140,50 @@ def editUserData(id, data, new_value):
     c.execute(f"UPDATE users SET {data} = ? WHERE id = ?", (new_value, id))
     dbase.commit()
     dbase.close()
+
+def getRelations():
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    c.execute("SELECT * from relations")
+    relations = c.fetchall()
+    print(relations)
+    dbase.commit()
+    dbase.close()
+    return relations
+
+def addRelation(id):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    for i in range(id):
+        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (id, getUserData(id).get("username"), i, "stranger"))
+        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (i, getUserData(i).get("username"), id, "stranger"))
+    dbase.commit()
+    dbase.close()
+
+def statusChange(id, other_id, relationship):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    c.execute("UPDATE relations SET relationship = ? WHERE (id, other_id) = (?, ?)", (relationship, id, other_id))
+    dbase.commit()
+    dbase.close()
+
+def allAcceptedUsers(id):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    c.execute("SELECT other_id WHERE id = ?", (id,))
+    others = c.fetchall()
+    print(others)
+    dbase.commit()
+    dbase.close()
+    return others
+
+def getAllMessages(sender_id, recipient_id):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    c.execute("")
+    c.execute("SELECT * FROM chat WHERE sender_id, recipient_id = ?, ?", (sender_id, recipient_id))
+    messages = c.fetchall()
+    print(messages)
+    dbase.commit()
+    dbase.close()
+    return messages

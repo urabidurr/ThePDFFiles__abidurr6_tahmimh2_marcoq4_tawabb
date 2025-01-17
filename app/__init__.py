@@ -93,6 +93,9 @@ def signup():
             elif ((db.getUserID(username) is None)):
                 db.createuser(username, password)
                 session['username'] = username
+                db.addRelation(db.getUserID(username))
+                print("Relations table: ")
+                print(db.getRelations())
             else:
                 flash("Username is already taken. Please try a different username")
         #RETURN BACK HOME BUTTON
@@ -157,6 +160,11 @@ def messages():
                          {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"},
                          {"sender": "Drake", "text": ";(", "time sent": "9:15"}],
                         []]
+        uid = db.allAcceptedUsers()
+        usernames = []
+        for n in uid:
+            usernames.append(db.getUserData(uid[n]).get("username"))
+        convos = db.getAllMessages(sender_id)
 
         if request.method == 'POST':
             type = request.form.get("type")
