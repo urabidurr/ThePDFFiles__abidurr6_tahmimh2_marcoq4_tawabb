@@ -81,12 +81,12 @@
     {% for profile in profiles %}
     <div class="card" style="--i:{{ loop.index0 }}" data-username="{{ profile.user }}">
       <div class="profile-content">
-        <div class="profile-name">{{ profile.user }}</div>
-        <div class="profile-desc">{{ profile.desc }}</div>
+        <div class="profile-name">{{ profile.username }}</div>
+        <div class="profile-desc">{{ profile.description }}</div>
         <div class="profile-info">
           <div class="profile-lang">
             <ion-icon name="code-outline"></ion-icon>
-            {{ profile.lang }}
+            {{ profile.language }}
           </div>
           <div class="profile-song">
             <ion-icon name="musical-notes-outline"></ion-icon>
