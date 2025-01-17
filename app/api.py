@@ -6,7 +6,10 @@ chat_sessions = {}
 
 
 CHARACTER_IDS = {
-    'Git Clone Topher': '6cfnxCukeMpNyVmQ-bIbR9_X3k95XDk1lm3Buot6AiM'
+    'Git Clone Topher': '6cfnxCukeMpNyVmQ-bIbR9_X3k95XDk1lm3Buot6AiM',
+    'Drake': 'R6pJbz7xlKe7XPrK4I7izj9zn53e4z4c-knowIkyqPU',
+    'Hisoka': 'lvB7Pethj1fXrKy1z6FswxpTzjKUGN-98sQX1xpyR-0',
+    'Bryant': '2vYCbrPtfS240F4CeQ1fB6pB0nQXqQhBkSLb1Bw-4P8'
 }
 
 

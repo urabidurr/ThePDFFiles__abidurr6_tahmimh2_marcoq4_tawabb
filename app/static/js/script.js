@@ -6,7 +6,24 @@ const dislike = document.querySelector('#dislike');
 // variables
 let cardCount = 0;
 
-// functions
+document.querySelectorAll('.card').forEach(cardElement => {
+  const existingContent = cardElement.innerHTML;
+  const card = new Card({
+    onDismiss: appendNewCard,
+    onLike: () => {
+      like.style.animationPlayState = 'running';
+      like.classList.toggle('trigger');
+    },
+    onDislike: () => {
+      dislike.style.animationPlayState = 'running';
+      dislike.classList.toggle('trigger');
+    }
+  });
+  card.element.innerHTML = existingContent;
+  cardElement.replaceWith(card.element);
+  cardCount++;
+});
+
 function appendNewCard() {
   const card = new Card({
     onDismiss: appendNewCard,
@@ -19,6 +36,13 @@ function appendNewCard() {
       dislike.classList.toggle('trigger');
     }
   });
+  
+  const lastCard = document.querySelector('.card:last-child');
+  if (lastCard) {
+    const content = lastCard.querySelector('.profile-content').cloneNode(true);
+    card.element.appendChild(content);
+  }
+  
   swiper.append(card.element);
   cardCount++;
 
@@ -26,9 +50,4 @@ function appendNewCard() {
   cards.forEach((card, index) => {
     card.style.setProperty('--i', index);
   });
-}
-
-// first 5 cards
-for (let i = 0; i < 5; i++) {
-  appendNewCard();
 }
