@@ -99,7 +99,8 @@ def profile():
     global edit_mode
     if 'username' in session:
         #THIS IS WHERE DATABASE CALL WILL BE.
-        username = session['username']
+        db.getUserID(session['username'])
+        username = db.getUserData(db.getUserID(username))
         description = "I am the guy."
         coding_lang = "NetLogo"
         song = "Everybody Wants to Rule the World"
