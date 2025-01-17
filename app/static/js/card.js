@@ -1,18 +1,16 @@
 class Card {
     constructor({
-      imageUrl,
       onDismiss,
       onLike,
       onDislike
     }) {
-      this.imageUrl = imageUrl;
       this.onDismiss = onDismiss;
       this.onLike = onLike;
       this.onDislike = onDislike;
       this.#init();
     }
   
-    // private properties
+
     #startPoint;
     #offsetX;
     #offsetY;
@@ -26,9 +24,6 @@ class Card {
     #init = () => {
       const card = document.createElement('div');
       card.classList.add('card');
-      const img = document.createElement('img');
-      img.src = this.imageUrl;
-      card.append(img);
       this.element = card;
       if (this.#isTouchDevice()) {
         this.#listenToTouchEvents();
