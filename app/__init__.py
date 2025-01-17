@@ -23,10 +23,9 @@ c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db even
 
 ##########################################
 db.create()
-
+db.addPresetUsers()
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    db.addPresetUsers()
     if 'username' in session:
         if request.method == 'POST':
             type = request.form.get("type")
@@ -169,7 +168,7 @@ def messages():
                          {"sender": "Drake", "text": ";(", "time sent": "9:15"}],
                         []]
         db.addMessage(0, 1, 2, )
-        uid = db.allAcceptedUsers()
+        uid = db.allAcceptedUsers(db.getUserData(session['username']))
         usernames = []
         for n in uid:
             usernames.append(db.getUserData(uid[n]).get("username"))
@@ -224,18 +223,18 @@ def match():
         if request.method == "POST":
             swipe_direction = request.form.get("swipe_direction")
             swiped_user = request.form.get("swiped_user")
-            
+
             if swipe_direction and swiped_user:
                 current_user_id = db.getUserID(session['username'])
                 swiped_user_id = db.getUserID(swiped_user)
-                
+
                 if swipe_direction == "like":
                     print(f"User {session['username']} liked {swiped_user}")
                     # Adding database logic here for likes
                 else:
                     print(f"User {session['username']} disliked {swiped_user}")
                     # Adding logic here for dislikes
-                
+
         return render_template('match.html', profiles = other_users)
     return redirect(url_for('home'))
 if __name__ == "__main__":
