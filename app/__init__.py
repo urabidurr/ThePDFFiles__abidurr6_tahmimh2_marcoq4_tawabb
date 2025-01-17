@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for, session, request, redirect
 import os, json, urllib.request, sqlite3, datetime
 from db import db
+from api import send_message, CHARACTER_IDS
+import asyncio
 
 app = Flask(__name__)
 
@@ -135,10 +137,16 @@ other_user = -1
 def messages():
     global other_user
     if 'username' in session:
-        #These two list will be made up of database calls. Index of value in other_users will correspond with the index of messages. Jinja templates will display the last message of the convo on the side.
         users = ['Git Clone Topher', 'Nobody', 'Drake', 'Gojo Satoru']
-        #This is a 2d list containing the message histories.
-        conversations = [[{"sender": session['username'], "text": "Hi", "time sent": "10:45"}, {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46"}], [{"sender": session['username'], "text": "New phone who dis?", "time sent": "23:00"}, {"sender": "Nobody", "text": "Nobody", "time sent": "23:05"}], [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15"}, {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"}, {"sender": "Drake", "text": ";(", "time sent": "9:15"}], []]
+        conversations = [[{"sender": session['username'], "text": "Hi", "time sent": "10:45"}, 
+                         {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46"}],
+                        [{"sender": session['username'], "text": "New phone who dis?", "time sent": "23:00"}, 
+                         {"sender": "Nobody", "text": "Nobody", "time sent": "23:05"}],
+                        [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15"}, 
+                         {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"}, 
+                         {"sender": "Drake", "text": ";(", "time sent": "9:15"}],
+                        []]
+        
         if request.method == 'POST':
             type = request.form.get("type")
             if (type == "logoutbutton"):
@@ -156,10 +164,28 @@ def messages():
                 return redirect(url_for('match'))
             elif (type == "sendbutton"):
                 message = request.form.get("usermessage")
-                time_sent = datetime.datetime.now().strftime("%H:%M")
-                conversations[other_user].append({"sender": session["username"], "text": message, "time sent": time_sent})
+                if message and message.strip():
+                    time_sent = datetime.datetime.now().strftime("%H:%M")
+                    conversations[other_user].append({"sender": session["username"],"text": message,"time-sent": time_sent})
+                    
+                    try:
+                        char_id = CHARACTER_IDS.get(users[other_user])
+                        if char_id:
+                            session_id = f"{session['username']}_{users[other_user]}"
+                            loop = asyncio.new_event_loop()
+                            asyncio.set_event_loop(loop)
+                            ai_name, ai_response = loop.run_until_complete(send_message(char_id, message, session_id))
+                            loop.close()                            
+                            conversations[other_user].append({"sender": users[other_user], "text": ai_response, "time-sent": datetime.datetime.now().strftime("%H:%M")})
+                    except Exception as e:
+                        print(f"Error getting AI response: {e}")
+                        # Add error message to conversation
+                        conversations[other_user].append({"sender": users[other_user], "text": "Sorry, I'm having trouble connecting right now.", "time-sent": datetime.datetime.now().strftime("%H:%M")})
             else:
-                other_user = int(type)
+                try:
+                    other_user = int(type)
+                except (TypeError, ValueError):
+                    pass
         return render_template('messages.html', matches = users, convos = conversations, convo_open = other_user, user = session['username'])
     return redirect(url_for('home'))
 ##########################################

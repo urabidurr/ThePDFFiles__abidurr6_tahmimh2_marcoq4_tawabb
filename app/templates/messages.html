@@ -27,7 +27,27 @@
     height: 500px;
     overflow-y: scroll
 }
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
+.chat-box {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.send-bar-container {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #ffffff;
+  padding: 10px;
+  border-top: 1px solid #e6e6e6;
+}
 
 
 .chat-message-left {
@@ -134,11 +154,11 @@
           {% if convo_open > -1 %}
                {% for message in convos[convo_open] %}
                {% if message.get("sender") == user %}
-               <li class="d-flex justify-content-between mb-4">
+               <li class="d-flex justify-content-end mb-4">
                  <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
                    class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
                  <div class="card">
-                   <div class="card-header d-flex text-align-right justify-content-between p-3">
+                   <div class="card-header d-flex justify-content-between p-3">
                      <p class="fw-bold mb-0">You</p>
                      <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{message.get("time-sent")}}</p>
                    </div>
@@ -152,13 +172,13 @@
 
                  {% endif %}
                  {% if message.get("sender") != user %}
-                    <li class="d-flex justify-content-between mb-4">
+                    <li class="d-flex justify-content-start mb-4">
                       <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
                         class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
                       <div class="card">
-                        <div class="card-header d-flex text-align-left justify-content-between p-3">
+                        <div class="card-header d-flex  justify-content-between p-3">
                           <p class="fw-bold mb-0">{{message.get("sender")}}</p>
-                          <p class="text-muted small mb-0"><i class="far fa-clock"></i>{{message.get("time sent")}}</p>
+                          <p class="text-muted small mb-0"><i class="far fa-clock"></i>{{message.get("time-sent")}}</p>
                         </div>
                         <div class="card-body">
                           <p class="mb-0">
@@ -172,32 +192,10 @@
                {% endfor %}
              {% endif %}
              <div class="col-md-6 col-lg-7 col-xl-8">
-
-        <ul class="list-unstyled">
-          <li class="d-flex justify-content-between mb-4">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
-              class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
-            <div class="card">
-              <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0">Brad Pitt</p>
-                <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
-              </div>
-              <div class="card-body">
-                <p class="mb-0">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                  labore et dolore magna aliqua.
-                </p>
-              </div>
-            </div>
-          </li>
-        </ul>
-
-
-
 					<div class="py-3 px-4 border-top">
-						<div class="input-group">
-              <form method="POST">
-  							<input type="text" class="form-control" name = "usermessage"placeholder="Type your message">
+						<div class="send-bar-container">
+              <form method="POST" class = "d-flex">
+  							<input type="text" class="form-control me-2" name = "usermessage" placeholder="Type your message">
   							<button class="btn btn-primary" name = "type" value = "sendbutton">Send</button>
               </form>
 						</div>
