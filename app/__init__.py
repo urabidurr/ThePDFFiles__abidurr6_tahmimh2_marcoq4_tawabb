@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for, session, request, redirect
 import os, json, urllib.request, sqlite3, datetime
 from db import db
+import api
+import asyncio
 
 app = Flask(__name__)
 
@@ -114,24 +116,37 @@ edit_mode = False
 def profile():
     global edit_mode
     if 'username' in session:
-        if request.method == 'POST':
-            type = request.form.get("type")
-            if (type == "logoutbutton"):
-                session.pop('username')
-                return redirect(url_for('home'))
-            elif (type == "homebutton"):
-                return redirect(url_for('home'))
-            elif (type =="messagesbutton"):
-                return redirect(url_for('messages'))
-            elif (type =="matchbutton"):
-                return redirect(url_for('match'))
-            elif (type =="editbutton"):
-                edit_mode = True
+        #THIS IS WHERE DATABASE CALL WILL BE.
         username = session['username']
         description = "I am the guy."
         coding_lang = "NetLogo"
         song = "Everybody Wants to Rule the World"
         pfp = "/static/devo_pfp.png"
+        if request.method == 'POST':
+            type = request.form.get("type")
+            if (type == "logoutbutton"):
+                edit_mode = False
+                session.pop('username')
+                return redirect(url_for('home'))
+            elif (type == "homebutton"):
+                edit_mode = False
+                return redirect(url_for('home'))
+            elif (type =="messagesbutton"):
+                edit_mode = False
+                return redirect(url_for('messages'))
+            elif (type =="matchbutton"):
+                edit_mode = False
+                return redirect(url_for('match'))
+            elif (type =="editbutton"):
+                edit_mode = True
+            elif (type =="submitedit"):
+                if (len(request.form.get("aboutme")) > 0):
+                    description = request.form.get("aboutme")
+                if (len(request.form.get("preflang")) > 0):
+                    coding_lang = request.form.get("preflang")
+                if (len(request.form.get("favsong")) > 0):
+                    song = request.form.get("favsong")
+                edit_mode = False
         return render_template('profile.html', user = username, desc = description, pref_lang = coding_lang, pref_song = song, image = pfp, edit = edit_mode)
     return redirect(url_for('home'))
 ##########################################
@@ -161,10 +176,12 @@ def messages():
                 return redirect(url_for('match'))
             elif (type == "sendbutton"):
                 message = request.form.get("usermessage")
+                api.p(message)
                 time_sent = datetime.datetime.now().strftime("%H:%M")
                 conversations[other_user].append({"sender": session["username"], "text": message, "time sent": time_sent})
             else:
                 other_user = int(type)
+                asyncio.run(api.main())
         return render_template('messages.html', matches = users, convos = conversations, convo_open = other_user, user = session['username'])
     return redirect(url_for('home'))
 ##########################################
