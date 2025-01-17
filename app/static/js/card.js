@@ -105,6 +105,27 @@ class Card {
       document.removeEventListener('mousemove', this.#handleMouseMove);
       document.removeEventListener('touchend', this.#handleTouchEnd);
       document.removeEventListener('touchmove', this.#handleTouchMove);
+      const username = this.element.getAttribute('data-username');
+      fetch('/match', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `swipe_direction=${direction > 0 ? 'like' : 'dislike'}&swiped_user=${username}`
+      });
+      const formData = new FormData();
+      formData.append('swipe_direction', direction > 0 ? 'like' : 'dislike');
+      formData.append('swiped_user', username);
+      
+      fetch('/match', {
+        method: 'POST',
+        body: formData
+      }).then(response => {
+        console.log('Swipe sent:', direction > 0 ? 'like' : 'dislike', username);
+      }).catch(error => {
+        console.error('Error:', error);
+      });
+
       this.element.style.transition = 'transform 1s';
       this.element.style.transform = `translate(${direction * window.innerWidth}px, ${this.#offsetY}px) rotate(${90 * direction}deg)`;
       this.element.classList.add('dismissing');

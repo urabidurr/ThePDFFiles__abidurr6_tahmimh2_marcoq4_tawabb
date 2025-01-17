@@ -24,6 +24,12 @@ document.querySelectorAll('.card').forEach(cardElement => {
   cardCount++;
 });
 
+function submitSwipe(direction, username) {
+  document.getElementById('swipeDirection').value = direction;
+  document.getElementById('swipeUser').value = username;
+  document.querySelector('form').submit();
+}
+
 function appendNewCard() {
   const card = new Card({
     onDismiss: appendNewCard,

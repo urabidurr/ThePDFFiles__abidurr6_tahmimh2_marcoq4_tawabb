@@ -1,3 +1,11 @@
+'''
+The PDF Files - Tawab Berri, Abidur Rahman, Marco Quintero, Tahmim Hassan
+SoftDev
+2025-01-09
+p02 - Devuzz
+time spent: 14 hrs
+'''
+
 from characterai import aiocai
 import asyncio
 import requests

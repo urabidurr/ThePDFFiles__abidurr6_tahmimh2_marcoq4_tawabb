@@ -1,3 +1,11 @@
+'''
+The PDF Files - Tawab Berri, Abidur Rahman, Marco Quintero, Tahmim Hassan
+SoftDev
+2025-01-09
+p02 - Devuzz
+time spent: 14 hrs
+'''
+
 from flask import Flask, render_template, url_for, session, request, redirect, flash, get_flashed_messages
 import os, json, urllib.request, sqlite3, datetime
 from db import db
@@ -214,7 +222,20 @@ def match():
         #Dictionaries will be made up by database calls
         other_users = [{"user": 'Nobody', "desc": "Nobody got you the way I do", "lang": "Java", "song": 'Nobodys'}, {"user": 'Drake', "desc": 'I am not allowed on here', "lang": 'C', "song": 'Wah Gwan Delilah'}, {"user": 'Gojo Satoru', "desc": 'I alone am the honored one', "lang": 'Python', "song": 'Skyfall'}]
         if request.method == "POST":
-            print("Status change: " + request.form.get("statuschange"))
+            swipe_direction = request.form.get("swipe_direction")
+            swiped_user = request.form.get("swiped_user")
+            
+            if swipe_direction and swiped_user:
+                current_user_id = db.getUserID(session['username'])
+                swiped_user_id = db.getUserID(swiped_user)
+                
+                if swipe_direction == "like":
+                    print(f"User {session['username']} liked {swiped_user}")
+                    # Adding database logic here for likes
+                else:
+                    print(f"User {session['username']} disliked {swiped_user}")
+                    # Adding logic here for dislikes
+                
         return render_template('match.html', profiles = other_users)
     return redirect(url_for('home'))
 if __name__ == "__main__":
