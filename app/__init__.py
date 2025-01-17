@@ -213,6 +213,8 @@ def match():
     if 'username' in session:
         #Dictionaries will be made up by database calls
         other_users = [{"user": 'Nobody', "desc": "Nobody got you the way I do", "lang": "Java", "song": 'Nobodys'}, {"user": 'Drake', "desc": 'I am not allowed on here', "lang": 'C', "song": 'Wah Gwan Delilah'}, {"user": 'Gojo Satoru', "desc": 'I alone am the honored one', "lang": 'Python', "song": 'Skyfall'}]
+        if request.method == "POST":
+            print("Status change: " + request.form.get("statuschange"))
         return render_template('match.html', profiles = other_users)
     return redirect(url_for('home'))
 if __name__ == "__main__":
