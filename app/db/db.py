@@ -118,29 +118,60 @@ def getUserData(id):
     return dict
 
 def getMessageData(sender_id, recipient_id):
-    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
-    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = dbase.cursor()
     messages = []
-    dict = {}
-    c.execute("SELECT content, date_sent FROM chat WHERE (sender_id, recipient_id) = (?, ?)", (sender_id, recipient_id))
-    ret = c.fetchall()
-    print(ret) #DIAGNOSTIC PRINT STATEMENT
-    for n in range(len(ret)):
-        dict['content'] = ret[n][0]
-        dict['date_sent'] = ret[n][1]
-        messages.append(dict)
-    print("Messages with sender" + str(sender_id) + " and " + str(recipient_id) + str(messages))
-    dbase.commit()
-    dbase.close()
+    try:
+        print(f"Getting messages for sender_id: {sender_id}, recipient_id: {recipient_id}")
+        c.execute("""
+            SELECT sender_id, content, date_sent 
+            FROM chat 
+            WHERE sender_id = ? AND recipient_id = ?
+        """, (sender_id, recipient_id))
+        sent_messages = c.fetchall()
+        print(f"Found {len(sent_messages)} sent messages") #DIAGNOSTIC PRINT
+        c.execute("""
+            SELECT sender_id, content, date_sent 
+            FROM chat 
+            WHERE sender_id = ? AND recipient_id = ?
+        """, (recipient_id, sender_id))
+        received_messages = c.fetchall()
+        print(f"Found {len(received_messages)} received messages") #DIAGNOSTIC PRINT
+        for msg in sent_messages:
+            messages.append({
+                'sender_id': msg[0],
+                'content': msg[1],
+                'date_sent': msg[2]
+            })
+        for msg in received_messages:
+            messages.append({
+                'sender_id': msg[0],
+                'content': msg[1],
+                'date_sent': msg[2]
+            })
+        messages.sort(key=lambda x: x['date_sent'])
+        print(f"Total messages processed: {len(messages)}") #DIAGNOSTIC PRINT
+        
+    except Exception as e:
+        print(f"Error in getMessageData: {e}")
+    finally:
+        dbase.close()
     return messages
 
 def addMessage(sender_id, recipient_id, content, date_sent):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, date_sent))
-    print("message added") #DIAGNOSTIC PRINT STATEMENT
-    dbase.commit()
-    dbase.close()
+    try:
+        c.execute(
+            "INSERT INTO chat (sender_id, recipient_id, content, date_sent) VALUES (?, ?, ?, ?);", 
+            (sender_id, recipient_id, content, date_sent)
+        )
+        print("message added") #DIAGNOSTIC PRINT STATEMENT
+        dbase.commit()
+    except Exception as e:
+        print(f"Error adding message: {e}")
+    finally:
+        dbase.close()
 
 def editUserData(id, data, new_value):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
