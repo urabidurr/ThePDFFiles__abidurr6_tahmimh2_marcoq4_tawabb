@@ -57,12 +57,16 @@ def create():
     db.close()
 
 def createuser(username, password):
-    c.execute('''SELECT * FROM users''')
-    lengt = c.fetchall()
-    id = len(lengt)
-    c.execute(
-        "INSERT INTO users (id, username, password) VALUES (?, ?, ?);", (id, username, password)
-    )
+    try:
+        c.execute('''SELECT * FROM users''')
+        lengt = c.fetchall()
+        id = len(lengt)
+    except:
+        id = 0
+    finally:
+        c.execute(
+            "INSERT INTO users (id, username, password) VALUES (?, ?, ?);", (id, username, password)
+        )
 
 def findUsername(username):
     try:
