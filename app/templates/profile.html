@@ -23,7 +23,19 @@
             {{desc}}
           </div>
         </div>
-
+        {% if edit %}
+        <div class="text-center">
+          <p class="opacity-75">About Me: <strong>{{description}}</strong></p>
+          <p class="opacity-75 mb-2">Preferred Language: <strong>{{pref_lang}}</strong></p>
+          <p class="opacity-75">Favorite Song: <strong>{{pref_song}}</strong></p>
+        </div>
+        <form method="POST">
+          <input type="text" placeholder="About Me" name="aboutme" class = "pb-5">
+          <input type="text" placeholder="Preferred Language" name="preflang" class = "pb-5">
+          <input type="text" placeholder="Favorite Song" name="favsong" class = "pb-5">
+          <button type="submit" name="type" value="submitedit">Submit Changes</button>
+        </form>
+        {% else %}
         <div class="text-center">
           <p class="opacity-75 mb-2">Preferred Language: <strong>{{pref_lang}}</strong></p>
           <p class="opacity-75">Favorite Song: <strong>{{pref_song}}</strong></p>
@@ -35,6 +47,7 @@
         <div class="mt-4">
           <a href="/" class="btn btn-primary">Return to Homepage</a>
         </div>
+        {% endif %}
       </div>
     </div>
 
