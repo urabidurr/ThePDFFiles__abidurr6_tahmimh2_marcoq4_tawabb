@@ -57,12 +57,16 @@ def create():
     db.close()
 
 def createuser(username, password):
-    c.execute('''SELECT * FROM users''')
-    lengt = c.fetchall()
-    id = len(lengt)
-    c.execute(
-        "INSERT INTO users (id, username, password) VALUES (?, ?, ?);", (id, username, password)
-    )
+    try:
+        c.execute('''SELECT * FROM users''')
+        lengt = c.fetchall()
+        id = len(lengt)
+    except:
+        id = 0
+    finally:
+        c.execute(
+            "INSERT INTO users (id, username, password) VALUES (?, ?, ?);", (id, username, password)
+        )
 
 def findUsername(username):
     try:
@@ -106,3 +110,6 @@ def addMessage(sender_id, recipient_id, content, date_sent):
     l = len(c.fetchall())
     c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES = (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, l, date_sent))
     print("message added") #DIAGNOSTIC PRINT STATEMENT
+
+def editUserData(id, data, new_value):
+    c.execute(f"UPDATE users SET {data} = {new_value} WHERE id = ?", (id))
