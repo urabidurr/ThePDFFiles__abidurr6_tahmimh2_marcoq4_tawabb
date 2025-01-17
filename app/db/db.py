@@ -16,6 +16,8 @@ c = db.cursor()  #facilitate db ops -- you will use cursor to trigger db events
 
 def create():
     # making a table for users
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     c.execute("DROP TABLE IF EXISTS users;")
     c.execute("DROP TABLE IF EXISTS chat;")
     c.execute("DROP TABLE IF EXISTS relations;")
@@ -53,10 +55,12 @@ def create():
             date_sent TEXT
             );
     ''')
-    db.commit()
-    db.close()
+    dbase.commit()
+    dbase.close()
 
 def createuser(username, password):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     try:
         c.execute('''SELECT * FROM users''')
         lengt = c.fetchall()
@@ -67,23 +71,39 @@ def createuser(username, password):
         c.execute(
             "INSERT INTO users (id, username, password) VALUES (?, ?, ?);", (id, username, password)
         )
+        dbase.commit()
+        dbase.close()
 
 def findUsername(username):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     try:
         c.execute("SELECT password FROM users WHERE username = ?", username)
+        dbase.commit()
+        dbase.close()
         return True
     except:
+        dbase.commit()
+        dbase.close()
         return False
 
 def getPassword(username):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     try:
         c.execute("SELECT password FROM users WHERE username = ?", username)
         pw = c.fetchall()
+        dbase.commit()
+        dbase.close()
         return pw[0]
     except:
+        dbase.commit()
+        dbase.close()
         return False
 
 def getUserData(id):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     dict = {}
     c.execute("SELECT (username, password, description, language, song) FROM users WHERE id = ?", id)
     ret = c.fetchall()
@@ -93,9 +113,13 @@ def getUserData(id):
     dict['description'] = ret[2]
     dict['language'] = ret[3]
     dict['song'] = ret[4]
+    dbase.commit()
+    dbase.close()
     return dict
 
 def getMessageData(sender_id, recipient_id):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     dict = {}
     c.execute("SELECT (content, message_id, date_sent) FROM chat WHERE (sender_id, recipient_id) = (?, ?)", (sender_id, recipient_id))
     ret = c.fetchall()
@@ -103,13 +127,23 @@ def getMessageData(sender_id, recipient_id):
     dict['content'] = ret[0]
     dict['message_id'] = ret[1]
     dict['date_sent'] = ret[2]
+    dbase.commit()
+    dbase.close()    
     return dict
 
 def addMessage(sender_id, recipient_id, content, date_sent):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     c.execute("SELECT * FROM chat WHERE (sender_id, recipient_id) = (?, ?)", (sender_id, recipient_id))
     l = len(c.fetchall())
     c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES = (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, l, date_sent))
     print("message added") #DIAGNOSTIC PRINT STATEMENT
+    dbase.commit()
+    dbase.close()
 
 def editUserData(id, data, new_value):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     c.execute(f"UPDATE users SET {data} = {new_value} WHERE id = ?", (id))
+    dbase.commit()
+    dbase.close()
