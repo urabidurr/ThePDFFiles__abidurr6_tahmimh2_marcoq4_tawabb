@@ -158,32 +158,21 @@ other_user = -1
 def messages():
     global other_user
     if 'username' in session:
-        current_user_id = db.getUserID(session['username'])
-        accepted_users = db.allAcceptedUsers(current_user_id)
-        print("All accepted users list: " + str(accepted_users))
-        
-        users = []
-        conversations = []
-        for user in accepted_users:
-            other_id = user[0]  
-            username = db.getUserData(other_id).get("username")
-            users.append(username)
-            user_messages = db.getMessageData(current_user_id, other_id)
-            character_messages = db.getMessageData(other_id, current_user_id)
-            conversation = []
-            for msg in user_messages:
-                conversation.append({
-                    "sender": session['username'],
-                    "text": msg['content'],
-                    "time-sent": msg['date_sent']
-                })
-            for msg in character_messages:
-                conversation.append({
-                    "sender": username,
-                    "text": msg['content'],
-                    "time-sent": msg['date_sent']
-                })
-            conversations.append(conversation)
+        users = ['Git Clone Topher', 'Nobody', 'Drake', 'Gojo Satoru']
+        conversations = [[{"sender": session['username'], "text": "Hi", "time sent": "10:45"},
+                         {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46"}],
+                        [{"sender": session['username'], "text": "New phone who dis?", "time sent": "23:00"},
+                         {"sender": "Nobody", "text": "Nobody", "time sent": "23:05"}],
+                        [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15"},
+                         {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"},
+                         {"sender": "Drake", "text": ";(", "time sent": "9:15"}],
+                        []]
+        # db.addMessage(0, 1, 2, 3)
+        # uid = db.allAcceptedUsers(db.getUserData(session['username']))
+        usernames = []
+        # for n in uid:
+        #     usernames.append(db.getUserData(uid[n]).get("username"))
+        # convos = db.getAllMessages(1)
         if request.method == 'POST':
             type = request.form.get("type")
             if (type == "logoutbutton"):
@@ -201,38 +190,29 @@ def messages():
                 return redirect(url_for('match'))
             elif (type == "sendbutton"):
                 message = request.form.get("usermessage")
-                if message and message.strip() and other_user != -1:
+                if message and message.strip():
                     time_sent = datetime.datetime.now().strftime("%H:%M")
-                    recipient_id = accepted_users[other_user][0]
-                    db.addMessage(current_user_id, recipient_id, message, time_sent)
+                    conversations[other_user].append({"sender": session["username"],"text": message,"time-sent": time_sent})
+
                     try:
                         char_id = CHARACTER_IDS.get(users[other_user])
                         if char_id:
                             session_id = f"{session['username']}_{users[other_user]}"
                             loop = asyncio.new_event_loop()
                             asyncio.set_event_loop(loop)
-                            _, character_response = loop.run_until_complete(
-                                send_message(char_id, message, session_id))
+                            ai_name, ai_response = loop.run_until_complete(send_message(char_id, message, session_id))
                             loop.close()
-                            current_time = datetime.datetime.now().strftime("%H:%M")
-                            db.addMessage(recipient_id, current_user_id, character_response, current_time)
-                            
+                            conversations[other_user].append({"sender": users[other_user], "text": ai_response, "time-sent": datetime.datetime.now().strftime("%H:%M")})
                     except Exception as e:
-                        print(f"Error getting character response: {e}")
-                        error_msg = "Sorry, I'm having trouble connecting right now."
-                        db.addMessage(recipient_id, current_user_id, error_msg, 
-                                    datetime.datetime.now().strftime("%H:%M"))
+                        print(f"Error getting AI response: {e}")
+                        # Add error message to conversation
+                        conversations[other_user].append({"sender": users[other_user], "text": "Sorry, I'm having trouble connecting right now.", "time-sent": datetime.datetime.now().strftime("%H:%M")})
             else:
                 try:
                     other_user = int(type)
                 except (TypeError, ValueError):
                     pass
-
-        return render_template('messages.html', 
-                             matches=users,
-                             convos=conversations,
-                             convo_open=other_user,
-                             user=session['username'])
+        return render_template('messages.html', matches = users, convos = conversations, convo_open = other_user, user = session['username'])
     return redirect(url_for('home'))
 ##########################################
 @app.route("/match", methods=['GET', 'POST'])
@@ -247,8 +227,7 @@ def match():
         if request.method == "POST":
             swipe_direction = request.form.get("swipe_direction")
             swiped_user = request.form.get("swiped_user")
-            print("swipe direction: " + swiped_direction)
-            print("swiped user: " + swiped_user)
+
             if swipe_direction and swiped_user:
                 current_user_id = db.getUserID(session['username'])
                 swiped_user_id = db.getUserID(swiped_user)
