@@ -102,14 +102,14 @@ def getUserData(id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     dict = {}
-    c.execute("SELECT (username, password, description, language, song) FROM users WHERE id = ?", id)
+    c.execute("SELECT username, password, description, language, song FROM users WHERE id = ?", (id,))
     ret = c.fetchall()
     print(ret) #DIAGNOSTIC PRINT STATEMENT
-    dict['username'] = ret[0]
-    dict['password'] = ret[1]
-    dict['description'] = ret[2]
-    dict['language'] = ret[3]
-    dict['song'] = ret[4]
+    dict['username'] = ret[0][0]
+    dict['password'] = ret[0][1]
+    dict['description'] = ret[0][2]
+    dict['language'] = ret[0][3]
+    dict['song'] = ret[0][4]
     dbase.commit()
     dbase.close()
     return dict
@@ -141,6 +141,6 @@ def addMessage(sender_id, recipient_id, content, date_sent):
 def editUserData(id, data, new_value):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute(f"UPDATE users SET {data} = {new_value} WHERE id = ?", (id))
+    c.execute(f"UPDATE users SET {data} = ? WHERE id = ?", (new_value, id))
     dbase.commit()
     dbase.close()

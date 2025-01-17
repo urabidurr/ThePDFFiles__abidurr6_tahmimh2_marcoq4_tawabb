@@ -99,11 +99,11 @@ def profile():
     global edit_mode
     if 'username' in session:
         #THIS IS WHERE DATABASE CALL WILL BE.
-        db.getUserID(session['username'])
-        username = db.getUserData(db.getUserID(username))
-        description = "I am the guy."
-        coding_lang = "NetLogo"
-        song = "Everybody Wants to Rule the World"
+        UID = db.getUserID(session['username'])
+        username = db.getUserData(UID).get("username")
+        description = db.getUserData(UID).get("description")
+        coding_lang = db.getUserData(UID).get("language")
+        song = db.getUserData(UID).get("song")
         pfp = "/static/devo_pfp.png"
         if request.method == 'POST':
             type = request.form.get("type")
@@ -125,10 +125,13 @@ def profile():
             elif (type =="submitedit"):
                 if (len(request.form.get("aboutme")) > 0):
                     description = request.form.get("aboutme")
+                    db.editUserData(UID, "description", description)
                 if (len(request.form.get("preflang")) > 0):
                     coding_lang = request.form.get("preflang")
+                    db.editUserData(UID, "language", coding_lang)
                 if (len(request.form.get("favsong")) > 0):
                     song = request.form.get("favsong")
+                    db.editUserData(UID, "song", song)
                 edit_mode = False
         return render_template('profile.html', user = username, desc = description, pref_lang = coding_lang, pref_song = song, image = pfp, edit = edit_mode)
     return redirect(url_for('home'))
