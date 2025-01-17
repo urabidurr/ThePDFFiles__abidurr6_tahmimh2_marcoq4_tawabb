@@ -219,7 +219,11 @@ def messages():
 def match():
     if 'username' in session:
         #Dictionaries will be made up by database calls
-        other_users = [{"user": 'Nobody', "desc": "Nobody got you the way I do", "lang": "Java", "song": 'Nobodys'}, {"user": 'Drake', "desc": 'I am not allowed on here', "lang": 'C', "song": 'Wah Gwan Delilah'}, {"user": 'Gojo Satoru', "desc": 'I alone am the honored one', "lang": 'Python', "song": 'Skyfall'}]
+        other_users = []
+        for n in range(db.latestUID()):
+            if (n != db.getUserID(session['username']) and db.getStatus(db.getUserID(session['username']), n)=="stranger"):
+                other_users.append(db.getUserData(n))
+        print("Strangers: " + str(other_users))
         if request.method == "POST":
             swipe_direction = request.form.get("swipe_direction")
             swiped_user = request.form.get("swiped_user")
@@ -230,9 +234,11 @@ def match():
 
                 if swipe_direction == "like":
                     print(f"User {session['username']} liked {swiped_user}")
+                    db.statusChange(current_user_id, swiped_user_id, "accepted")
                     # Adding database logic here for likes
                 else:
                     print(f"User {session['username']} disliked {swiped_user}")
+                    db.statusChange(current_user_id, swiped_user_id, "rejected")
                     # Adding logic here for dislikes
 
         return render_template('match.html', profiles = other_users)

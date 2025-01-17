@@ -51,7 +51,6 @@ def create():
             sender_id INTEGER,
             recipient_id INTEGER,
             content TEXT,
-            message_id INTEGER PRIMARY KEY,
             date_sent TEXT
             );
     ''')
@@ -73,7 +72,15 @@ def createuser(username, password):
         )
         dbase.commit()
         dbase.close()
-
+def latestUID():
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    c.execute('''SELECT * FROM users''')
+    lengt = c.fetchall()
+    id = len(lengt)
+    dbase.commit()
+    dbase.close()
+    return id
 def getUserID(username):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
@@ -113,13 +120,16 @@ def getUserData(id):
 def getMessageData(sender_id, recipient_id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    messages = []
     dict = {}
-    c.execute("SELECT content, message_id, date_sent FROM chat WHERE sender_id, recipient_id = ?, ?", (sender_id, recipient_id))
+    c.execute("SELECT content, date_sent FROM chat WHERE sender_id, recipient_id = ?, ?", (sender_id, recipient_id))
     ret = c.fetchall()
     print(ret) #DIAGNOSTIC PRINT STATEMENT
-    dict['content'] = ret[0]
-    dict['message_id'] = ret[1]
-    dict['date_sent'] = ret[2]
+    for n in range(len(ret)):
+        dict['content'] = ret[n][0]
+        dict['date_sent'] = ret[n][1]
+        messages.append(dict)
+    print("Dictionary of messages with recepients" + str(dict)
     dbase.commit()
     dbase.close()
     return dict
@@ -127,9 +137,7 @@ def getMessageData(sender_id, recipient_id):
 def addMessage(sender_id, recipient_id, content, date_sent):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("SELECT * FROM chat WHERE sender_id, recipient_id = ?, ?", (sender_id, recipient_id))
-    l = len(c.fetchall())
-    c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, l, date_sent))
+    c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, date_sent))
     print("message added") #DIAGNOSTIC PRINT STATEMENT
     dbase.commit()
     dbase.close()
@@ -160,6 +168,16 @@ def addRelation(id):
     dbase.commit()
     dbase.close()
 
+def getStatus(id, other_id):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    c.execute("SELECT relationship from relations WHERE (id, other_id) = (?, ?)", (id, other_id))
+    status = c.fetchall()
+    print("Relationship status of " + str(id) + " and " + str(other_id) + str(status))
+    dbase.commit()
+    dbase.close()
+    return status[0][0]
+
 def statusChange(id, other_id, relationship):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
@@ -187,3 +205,21 @@ def getAllMessages(sender_id, recipient_id):
     dbase.commit()
     dbase.close()
     return messages
+
+def addPresetUsers():
+    createuser("topher", "mykolyk")
+    editUserData(0, "description", "Hello devos. This is Topher Mykolyk.")
+    editUserData(0, "language", "DrRacket")
+    editUserData(0, "song", "Not Like Us")
+    createuser("bryant", "cupcake")
+    addRelation(1)
+    createuser("drake", "anitamaxwynn")
+    editUserData(2, "description", "Yo this is Aubrey Drake Graham")
+    editUserData(2, "language", "Microsoft Assembly Script")
+    editUserData(2, "song", "wahgwan delilah")
+    addRelation(2)
+    createuser("gojo satoru", "honoredone")
+    editUserData(3, "description", "I alone am the honored one.")
+    editUserData(3, "language", "Python.")
+    editUserData(3, "song", "Skyfall")
+    addRelation(3)
