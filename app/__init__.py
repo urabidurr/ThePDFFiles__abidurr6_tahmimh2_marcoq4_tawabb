@@ -47,19 +47,14 @@ def login():
             username = request.form.get("user")
             password = request.form.get("password")
             #CHECK IF VALID WITH DATABASE
-
-            c.execute("SELECT password FROM users WHERE username = ?", (username,))
-            passw = c.fetchone()
-            #print(passw)
-            try:
-                if (passw and passw[0] == password):
-                    session['username'] = username
-                    return redirect(url_for('home'))
-            except:
+            if (db.findUsername(username) and db.getPassword(username) == password):
+                session['username'] = username
+            else:
+                flash("Username or password is incorrect. Try again")
         #RETURN BACK HOME BUTTON
-                if (type == "returnhome"):
-                    return redirect(url_for('home'))
-                return redirect(url_for('home'))
+        if (type == "returnhome"):
+            return redirect(url_for('home'))
+        return redirect(url_for('home'))
 
     #IF LOGGED IN
     if 'username' in session:
@@ -80,29 +75,11 @@ def signup():
             password = request.form.get("password")
             #Comment from DMQ: SHOULDN'T THIS BE A FUNCTION IN db.py THAT IS CALLED IN THIS FILE?
             #ADD TO DATABASE
-            '''c.execute("SELECT id FROM users;")
-            num = c.fetchall()
-
-            c.execute("INSERT INTO users (id, username, password) VALUES (?, ?, ?);",
-            (len(num), username, password))
-
-            print(len(num))
-            for user in range(len(num)):
-                c.execute("INSERT INTO relations (other_id, relationship) VALUES (?, ?);", (len(num), "stranger"))
-                print(1)
-                c.execute("SELECT * FROM relations")
-                print(2)
-                pri = c.fetchall()
-                print(pri)
-            #print("USER IDS:")
-            #print(num)
-
-            c.execute("SELECT * FROM users")
-            prin = c.fetchall()
-            print("users: ")
-            print(prin)'''
-
-            session['username'] = username
+            if (not db.findUsername(username)):
+                db.createuser(username, password)
+                session['username'] = username
+            else:
+                flash("Username is already taken. Please try a different username")
             return redirect(url_for('home'))
         #RETURN BACK HOME BUTTON
         if (type == "returnhome"):
