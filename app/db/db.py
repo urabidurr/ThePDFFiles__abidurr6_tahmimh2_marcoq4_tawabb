@@ -118,60 +118,28 @@ def getUserData(id):
     return dict
 
 def getMessageData(sender_id, recipient_id):
-    dbase = sqlite3.connect(DB_FILE, check_same_thread=False)
-    c = dbase.cursor()
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     messages = []
-    try:
-        print(f"Getting messages for sender_id: {sender_id}, recipient_id: {recipient_id}")
-        c.execute("""
-            SELECT sender_id, content, date_sent 
-            FROM chat 
-            WHERE sender_id = ? AND recipient_id = ?
-        """, (sender_id, recipient_id))
-        sent_messages = c.fetchall()
-        print(f"Found {len(sent_messages)} sent messages") #DIAGNOSTIC PRINT
-        c.execute("""
-            SELECT sender_id, content, date_sent 
-            FROM chat 
-            WHERE sender_id = ? AND recipient_id = ?
-        """, (recipient_id, sender_id))
-        received_messages = c.fetchall()
-        print(f"Found {len(received_messages)} received messages") #DIAGNOSTIC PRINT
-        for msg in sent_messages:
-            messages.append({
-                'sender_id': msg[0],
-                'content': msg[1],
-                'date_sent': msg[2]
-            })
-        for msg in received_messages:
-            messages.append({
-                'sender_id': msg[0],
-                'content': msg[1],
-                'date_sent': msg[2]
-            })
-        messages.sort(key=lambda x: x['date_sent'])
-        print(f"Total messages processed: {len(messages)}") #DIAGNOSTIC PRINT
-        
-    except Exception as e:
-        print(f"Error in getMessageData: {e}")
-    finally:
-        dbase.close()
-    return messages
+    dict = {}
+    c.execute("SELECT content, date_sent FROM chat WHERE sender_id, recipient_id = ?, ?", (sender_id, recipient_id))
+    ret = c.fetchall()
+    print(ret) #DIAGNOSTIC PRINT STATEMENT
+    for n in range(len(ret)):
+        dict['content'] = ret[n][0]
+        dict['date_sent'] = ret[n][1]
+        messages.append(dict)
+    dbase.commit()
+    dbase.close()
+    return dict
 
 def addMessage(sender_id, recipient_id, content, date_sent):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    try:
-        c.execute(
-            "INSERT INTO chat (sender_id, recipient_id, content, date_sent) VALUES (?, ?, ?, ?);", 
-            (sender_id, recipient_id, content, date_sent)
-        )
-        print("message added") #DIAGNOSTIC PRINT STATEMENT
-        dbase.commit()
-    except Exception as e:
-        print(f"Error adding message: {e}")
-    finally:
-        dbase.close()
+    c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, date_sent))
+    print("message added") #DIAGNOSTIC PRINT STATEMENT
+    dbase.commit()
+    dbase.close()
 
 def editUserData(id, data, new_value):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
@@ -194,15 +162,15 @@ def addRelation(id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     for i in range(id):
-        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (id, getUserData(id).get("username"), i, "accepted"))
-        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (i, getUserData(i).get("username"), id, "accepted"))
+        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (id, getUserData(id).get("username"), i, "stranger"))
+        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (i, getUserData(i).get("username"), id, "stranger"))
     dbase.commit()
     dbase.close()
 
 def getStatus(id, other_id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("SELECT relationship FROM relations WHERE (id, other_id) = (?, ?)", (id, other_id))
+    c.execute("SELECT relationship from relations WHERE (id, other_id) = (?, ?)", (id, other_id))
     status = c.fetchall()
     print("Relationship status of " + str(id) + " and " + str(other_id) + str(status))
     dbase.commit()
@@ -213,14 +181,13 @@ def statusChange(id, other_id, relationship):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     c.execute("UPDATE relations SET relationship = ? WHERE (id, other_id) = (?, ?)", (relationship, id, other_id))
-    c.execute("UPDATE relations SET relationship = ? WHERE (id, other_id) = (?, ?)", (relationship, other_id, id))
     dbase.commit()
     dbase.close()
 
 def allAcceptedUsers(id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("SELECT other_id FROM relations WHERE (id, relationship) = (?, ?)", (id, "accepted"))
+    c.execute("SELECT other_id WHERE id = ?", (id,))
     others = c.fetchall()
     print(others)
     dbase.commit()
