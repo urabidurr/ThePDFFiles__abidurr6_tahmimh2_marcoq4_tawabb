@@ -18,7 +18,7 @@ db.create()
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-
+    db.addPresetUsers()
     if 'username' in session:
         if request.method == 'POST':
             type = request.form.get("type")
@@ -160,12 +160,12 @@ def messages():
                          {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"},
                          {"sender": "Drake", "text": ";(", "time sent": "9:15"}],
                         []]
+        db.addMessage(0, 1, 2, )
         uid = db.allAcceptedUsers()
         usernames = []
         for n in uid:
             usernames.append(db.getUserData(uid[n]).get("username"))
         convos = db.getAllMessages(sender_id)
-
         if request.method == 'POST':
             type = request.form.get("type")
             if (type == "logoutbutton"):

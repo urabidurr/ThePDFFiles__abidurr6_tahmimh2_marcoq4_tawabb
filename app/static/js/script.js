@@ -30,19 +30,25 @@ function appendNewCard() {
     onLike: () => {
       like.style.animationPlayState = 'running';
       like.classList.toggle('trigger');
+      let val=document.getElementById("result");
+      val.value="accepted";
+      console.log("This has been accepted")
     },
     onDislike: () => {
       dislike.style.animationPlayState = 'running';
       dislike.classList.toggle('trigger');
+      let val=document.getElementById("result");
+      val.value="rejected";
+      console.log("This has been rejected")
     }
   });
-  
+
   const lastCard = document.querySelector('.card:last-child');
   if (lastCard) {
     const content = lastCard.querySelector('.profile-content').cloneNode(true);
     card.element.appendChild(content);
   }
-  
+
   swiper.append(card.element);
   cardCount++;
 
