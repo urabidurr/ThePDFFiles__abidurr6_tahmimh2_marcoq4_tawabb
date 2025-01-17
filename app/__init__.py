@@ -1,3 +1,11 @@
+'''
+The PDF Files - Tawab Berri, Abidur Rahman, Marco Quintero, Tahmim Hassan
+SoftDev
+2025-01-09
+p02 - Devuzz
+time spent: 14 hrs
+'''
+
 from flask import Flask, render_template, url_for, session, request, redirect, flash, get_flashed_messages
 import os, json, urllib.request, sqlite3, datetime
 from db import db
