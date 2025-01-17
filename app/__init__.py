@@ -158,21 +158,13 @@ other_user = -1
 def messages():
     global other_user
     if 'username' in session:
-        users = ['Git Clone Topher', 'Nobody', 'Drake', 'Gojo Satoru']
-        conversations = [[{"sender": session['username'], "text": "Hi", "time sent": "10:45"},
-                         {"sender": 'Git Clone Topher', "text": "Hello fellow devo of the intertrash", "time sent": "10:46"}],
-                        [{"sender": session['username'], "text": "New phone who dis?", "time sent": "23:00"},
-                         {"sender": "Nobody", "text": "Nobody", "time sent": "23:05"}],
-                        [{"sender": 'Drake', "text": "What's good devo?", "time sent": "8:15"},
-                         {"sender": session['username'], "text": "Your music sucks", "time sent": "9:15"},
-                         {"sender": "Drake", "text": ";(", "time sent": "9:15"}],
-                        []]
-        db.addMessage(0, 1, 2, )
-        uid = db.allAcceptedUsers(db.getUserData(session['username']))
-        usernames = []
-        for n in uid:
-            usernames.append(db.getUserData(uid[n]).get("username"))
-        convos = db.getAllMessages(sender_id)
+        uid = db.allAcceptedUsers(db.getUserID(session['username']))
+        print("All accepted users list: " + str(uid))
+        users = []
+        conversations = []
+        for n in range(len(uid)):
+            users.append(db.getUserData(uid[n][0]).get("username"))
+            conversations.append(db.getMessageData(db.getUserID(session['username']), uid[n][0]) + db.getMessageData(uid[n][0], db.getUserID(session['username'])))
         if request.method == 'POST':
             type = request.form.get("type")
             if (type == "logoutbutton"):
@@ -227,7 +219,8 @@ def match():
         if request.method == "POST":
             swipe_direction = request.form.get("swipe_direction")
             swiped_user = request.form.get("swiped_user")
-
+            print("swipe direction: " + swiped_direction)
+            print("swiped user: " + swiped_user)
             if swipe_direction and swiped_user:
                 current_user_id = db.getUserID(session['username'])
                 swiped_user_id = db.getUserID(swiped_user)

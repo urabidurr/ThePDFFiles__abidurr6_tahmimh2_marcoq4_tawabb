@@ -122,17 +122,17 @@ def getMessageData(sender_id, recipient_id):
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     messages = []
     dict = {}
-    c.execute("SELECT content, date_sent FROM chat WHERE sender_id, recipient_id = ?, ?", (sender_id, recipient_id))
+    c.execute("SELECT content, date_sent FROM chat WHERE (sender_id, recipient_id) = (?, ?)", (sender_id, recipient_id))
     ret = c.fetchall()
     print(ret) #DIAGNOSTIC PRINT STATEMENT
     for n in range(len(ret)):
         dict['content'] = ret[n][0]
         dict['date_sent'] = ret[n][1]
         messages.append(dict)
-    print("Dictionary of messages with recepients" + str(dict)
+    print("Messages with sender" + str(sender_id) + " and " + str(recipient_id) + str(messages))
     dbase.commit()
     dbase.close()
-    return dict
+    return messages
 
 def addMessage(sender_id, recipient_id, content, date_sent):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
@@ -163,15 +163,15 @@ def addRelation(id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     for i in range(id):
-        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (id, getUserData(id).get("username"), i, "stranger"))
-        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (i, getUserData(i).get("username"), id, "stranger"))
+        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (id, getUserData(id).get("username"), i, "accepted"))
+        c.execute("INSERT INTO relations (id, username, other_id, relationship) VALUES (?, ?, ?, ?)", (i, getUserData(i).get("username"), id, "accepted"))
     dbase.commit()
     dbase.close()
 
 def getStatus(id, other_id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("SELECT relationship from relations WHERE (id, other_id) = (?, ?)", (id, other_id))
+    c.execute("SELECT relationship FROM relations WHERE (id, other_id) = (?, ?)", (id, other_id))
     status = c.fetchall()
     print("Relationship status of " + str(id) + " and " + str(other_id) + str(status))
     dbase.commit()
@@ -182,13 +182,14 @@ def statusChange(id, other_id, relationship):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
     c.execute("UPDATE relations SET relationship = ? WHERE (id, other_id) = (?, ?)", (relationship, id, other_id))
+    c.execute("UPDATE relations SET relationship = ? WHERE (id, other_id) = (?, ?)", (relationship, other_id, id))
     dbase.commit()
     dbase.close()
 
 def allAcceptedUsers(id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("SELECT other_id WHERE id = ?", (id,))
+    c.execute("SELECT other_id FROM relations WHERE (id, relationship) = (?, ?)", (id, "accepted"))
     others = c.fetchall()
     print(others)
     dbase.commit()

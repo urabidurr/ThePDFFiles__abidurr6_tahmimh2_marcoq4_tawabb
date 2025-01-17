@@ -25,7 +25,7 @@ document.querySelectorAll('.card').forEach(cardElement => {
 });
 
 function submitSwipe(direction, username) {
-  document.getElementById('swipeDirection').value = direction;
+  document.getElementById('swipeDirection').style.color = "red";
   document.getElementById('swipeUser').value = username;
   document.querySelector('form').submit();
 }
