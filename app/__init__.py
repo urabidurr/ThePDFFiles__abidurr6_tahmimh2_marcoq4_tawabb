@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, session, request, redirect
+from flask import Flask, render_template, url_for, session, request, redirect, flash, get_flashed_messages
 import os, json, urllib.request, sqlite3, datetime
 from db import db
 
@@ -47,14 +47,20 @@ def login():
             username = request.form.get("user")
             password = request.form.get("password")
             #CHECK IF VALID WITH DATABASE
-            if (db.findUsername(username) and db.getPassword(username) == password):
+            print("LOGIN get username " + str(db.getUserID(username)))
+            print(db.getUserID(username) is not None)
+            print(db.getPassword(username)[0])
+            print("LOGIN check password" + str(db.getPassword(username)[0]==password))
+            if ((db.getUserID(username) is not None) and (db.getPassword(username)[0]==password)):
                 session['username'] = username
+                print("LOGIN CORRECT")
+                return redirect(url_for('home'))
             else:
+                print("LOGIN INCORRECT")
                 flash("Username or password is incorrect. Try again")
         #RETURN BACK HOME BUTTON
         if (type == "returnhome"):
             return redirect(url_for('home'))
-        return redirect(url_for('home'))
 
     #IF LOGGED IN
     if 'username' in session:
@@ -75,7 +81,8 @@ def signup():
             password = request.form.get("password")
             #Comment from DMQ: SHOULDN'T THIS BE A FUNCTION IN db.py THAT IS CALLED IN THIS FILE?
             #ADD TO DATABASE
-            if (not db.findUsername(username)):
+            print("SIGNUP get username" + str(db.getUserID(username)))
+            if ((db.getUserID(username) is None)):
                 db.createuser(username, password)
                 session['username'] = username
             else:

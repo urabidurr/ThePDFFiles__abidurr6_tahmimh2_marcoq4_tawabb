@@ -73,33 +73,30 @@ def createuser(username, password):
         )
         dbase.commit()
         dbase.close()
-
-def findUsername(username):
+def getUserID(username):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    try:
-        c.execute("SELECT password FROM users WHERE username = ?", username)
-        dbase.commit()
-        dbase.close()
-        return True
-    except:
-        dbase.commit()
-        dbase.close()
-        return False
+    c.execute("SELECT id FROM users WHERE username = ?", (username,))
+    row = c.fetchone()
+    dbase.close()
+    if row == None:
+        return None
+    return row[0]
+
+def verifyUser(username, password):
+    dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
+    c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
+    c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+    return c.fetchone() is not None
 
 def getPassword(username):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = dbase.cursor()  #facilitate db ops -- you will use cursor to trigger db events
-    try:
-        c.execute("SELECT password FROM users WHERE username = ?", username)
-        pw = c.fetchall()
-        dbase.commit()
-        dbase.close()
-        return pw[0]
-    except:
-        dbase.commit()
-        dbase.close()
-        return False
+    c.execute("SELECT password FROM users WHERE username = ?", (username,))
+    pw = c.fetchall()
+    dbase.commit()
+    dbase.close()
+    return pw[0]
 
 def getUserData(id):
     dbase = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
