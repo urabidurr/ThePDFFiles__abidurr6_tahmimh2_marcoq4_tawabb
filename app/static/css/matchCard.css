@@ -18,6 +18,17 @@ body {
   background: linear-gradient(0deg, rgb(255, 255, 255), rgb(32, 202, 188)) no-repeat;
 }
 
+.icon-container {
+  text-align: center;
+  user-select: none;
+}
+
+.icon-container h1 {
+  margin-top: 10px;
+  font-size: 2rem;
+  color: #333;
+}
+
 #swiper {
   height: 70vh;
   aspect-ratio: 2 / 3;
@@ -58,7 +69,6 @@ body {
   animation-duration: 1s;
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
-  /* don't run animation at the beginning */
   animation-play-state: paused;
 }
 
@@ -68,34 +78,28 @@ body {
 }
 
 #like {
-  color: red;
+  color: rgb(85, 238, 65);
   background-color: rgba(255, 255, 255, 0.5);
 }
 
 #dislike {
-  color: #ccc;
-  background-color: rgba(0, 0, 0, 0.5);
+  color: red;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 @keyframes animation1 {
-
-  0%,
-  100% {
+  0%, 100% {
     opacity: 0.2;
   }
-
   50% {
     opacity: 1;
   }
 }
 
 @keyframes animation2 {
-
-  0%,
-  100% {
+  0%, 100% {
     opacity: 0.2;
   }
-
   50% {
     opacity: 1;
   }
