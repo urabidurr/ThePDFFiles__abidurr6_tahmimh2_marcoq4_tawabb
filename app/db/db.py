@@ -106,3 +106,6 @@ def addMessage(sender_id, recipient_id, content, date_sent):
     l = len(c.fetchall())
     c.execute("INSERT INTO chat (sender_id, recipient_id, content, message_id, date_sent) VALUES = (?, ?, ?, ?, ?)", (sender_id, recipient_id, content, l, date_sent))
     print("message added") #DIAGNOSTIC PRINT STATEMENT
+
+def editUserData(id, data, new_value):
+    c.execute(f"UPDATE users SET {data} = {new_value} WHERE id = ?", (id))
